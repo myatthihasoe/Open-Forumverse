@@ -1,9 +1,10 @@
 import Image from "next/image";
 import logo from "@/public/images/logo.svg";
 import profile from "@/public/images/profile.jpg";
+import Input from "./Input";
 export default function Navbar() {
   return (
-    <nav className="flex justify-between px-10 py-4">
+    <nav className="flex justify-between px-10 py-7">
       <div className="flex items-center justify-center space-x-4">
         <Image
           src={logo}
@@ -16,14 +17,10 @@ export default function Navbar() {
           Open <span className="text-main">Forumverse</span>
         </h1>
       </div>
-      <div className="flex items-center justify-center space-x-4">
-        <input
-          type="text"
-          className="bg-primary px-4 py-2 md:w-[600px] sm:w-[400px] lg:w-[800px] rounded-md"
-          placeholder="Search anything with AI"
-        />
+      <div className="md:w-[600px] sm:w-[300px]">
+        <Input placeholder="Search anything with AI" />
       </div>
-      <div className="flex items-center justify-center space-x-4">
+      <div>
         <Image
           src={profile}
           alt="profile"
