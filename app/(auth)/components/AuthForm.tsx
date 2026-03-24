@@ -1,14 +1,15 @@
 "use client";
 // import { signIn } from "@/auth";
 import Button from "@/components/Button";
+import ROUTES from "@/routes";
 import { signIn } from "next-auth/react";
 import { Bounce, toast } from "react-toastify";
 
 export default function AuthForm({ type }: { type: string }) {
-  const oauthSignIn = async () => {
+  const oauthSignIn = async (oauthType: "google" | "github") => {
     try {
-      await signIn("github", {
-        redirectTo: "/",
+      await signIn(oauthType, {
+        redirectTo: ROUTES.HOME,
       });
       toast.info("Login Successfully!", {
         position: "bottom-right",
@@ -39,13 +40,17 @@ export default function AuthForm({ type }: { type: string }) {
   };
   return (
     <div className="flex space-x-3 ">
-      <Button icon={"/images/profile.jpg"} variant="outline">
+      <Button
+        icon={"/images/profile.jpg"}
+        variant="outline"
+        onClick={() => oauthSignIn("google")}
+      >
         {type} with Google
       </Button>
       <Button
         icon={"/images/profile.jpg"}
         variant="outline"
-        onClick={oauthSignIn}
+        onClick={() => oauthSignIn("github")}
       >
         {type} with Github
       </Button>
