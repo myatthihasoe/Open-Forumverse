@@ -9,5 +9,6 @@ export type InputProps = {
 export type ButtonProps = {
   children: ReactNode;
   icon?: string | StaticImageData;
-  type?: "normal" | "outline";
-};
+  variant?: "normal" | "outline";
+  
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;

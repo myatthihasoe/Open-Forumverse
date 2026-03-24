@@ -25,7 +25,7 @@ export default function page() {
             Tenetur consequuntur repudiandae ipsum incidunt temporibus quae
             quos, veritatis animi laborum?
           </p>
-          <Button type="outline">Create New Account?</Button>
+          <Button variant="outline">Create New Account?</Button>
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">
@@ -42,7 +42,7 @@ export default function page() {
           <div>
             <Button>Login</Button>
           </div>
-          <AuthForm />
+          <AuthForm type="Login" />
         </div>
       </div>
     </div>
