@@ -11,17 +11,7 @@ export default function AuthForm({ type }: { type: string }) {
       await signIn(oauthType, {
         redirectTo: ROUTES.HOME,
       });
-      toast.info("Login Successfully!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message, {

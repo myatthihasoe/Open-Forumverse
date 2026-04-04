@@ -2,6 +2,7 @@ import Image from "next/image";
 import logo from "@/public/images/logo.svg";
 import profile from "@/public/images/profile.jpg";
 import Input from "./Input";
+import SearchInput from "./SearchInput";
 export default function Navbar() {
   return (
     <nav className="flex justify-between px-10 py-7">
@@ -18,7 +19,7 @@ export default function Navbar() {
         </h1>
       </div>
       <div className="md:w-[600px] sm:w-[300px]">
-        <Input placeholder="Search anything with AI" />
+        <SearchInput />
       </div>
       <div>
         <Image
