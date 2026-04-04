@@ -12,7 +12,7 @@ export default function page() {
         <div className="space-y-10">
           <Link href={ROUTES.HOME} className="flex items-center space-x-4">
             <Image
-              src={"/images/profile.jpg"}
+              src={"/images/Copilot_Icon_White.svg"}
               alt="login-image"
               width={100}
               height={100}
