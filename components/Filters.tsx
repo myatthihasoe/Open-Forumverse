@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import { useState } from "react";
 
 export default function Filters() {
-  const [filter, setFilter] = useState("");
+  const SearchParams = useSearchParams();
+  const [filter, setFilter] = useState(SearchParams.get("filter") || "");
   const router = useRouter();
   const handleFilter = (filterType: string) => {
     if (filterType === filter) {
@@ -27,17 +28,16 @@ export default function Filters() {
     <div className="flex space-x-6 p-5">
       <button
         onClick={() => handleFilter("react")}
-        className={`px-4 py-2 text-gray-300 rounded-xl ${filter === "react" ? "bg-main" : "bg-primary"}`}
+        className={`px-4 py-2 w-[100px] text-gray-300 rounded-xl ${filter === "react" ? "bg-main" : "bg-tertiary"}`}
       >
         React
       </button>
       <button
         onClick={() => handleFilter("nextjs")}
-        className={`px-4 py-2 text-gray-300 rounded-xl ${filter === "nextjs" ? "bg-main" : "bg-primary"}`}
+        className={`px-4 py-2 w-[100px] text-gray-300 rounded-xl ${filter === "nextjs" ? "bg-main" : "bg-tertiary"}`}
       >
         Nextjs
       </button>
-      {filter}
     </div>
   );
 }

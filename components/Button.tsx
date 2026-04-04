@@ -4,12 +4,12 @@ import Image from "next/image";
 export default function Button({
   children,
   icon,
-  variant= "normal",
+  variant = "normal",
   ...props
-}: ButtonProps ) {
+}: ButtonProps) {
   return (
     <button
-    {...props}
+      {...props}
       type="submit"
       className={`flex w-full space-x-4 px-5 py-2 rounded-lg border-main items-center justify-center border-2 ${variant === "normal" ? "bg-main text-white" : "bg-primary text-white"}`}
     >

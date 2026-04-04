@@ -5,11 +5,15 @@
   --foreground: #ffffff;
   --primary: #081338;
   --main: #0092ef;
+  --tertiary: #00154A;
+  --card: #070E27;
 }
 
 @theme inline {
   --color-main: var(--main);
   --color-primary: var(--primary);
+  --color-tertiary: var(--tertiary);
+  --color-card: var(--card);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -21,6 +25,8 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --main: #0092ef;
+    --tertiary: #00154A;
+    --card: #070E27;
   }
 }
 

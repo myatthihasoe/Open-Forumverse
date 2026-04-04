@@ -11,7 +11,6 @@ export default function AuthForm({ type }: { type: string }) {
       await signIn(oauthType, {
         redirectTo: ROUTES.HOME,
       });
-      
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message, {
@@ -31,14 +30,14 @@ export default function AuthForm({ type }: { type: string }) {
   return (
     <div className="flex space-x-3 ">
       <Button
-        icon={"/images/profile.jpg"}
+        icon={"/images/google.webp"}
         variant="outline"
         onClick={() => oauthSignIn("google")}
       >
         {type} with Google
       </Button>
       <Button
-        icon={"/images/profile.jpg"}
+        icon={"/images/GItHubWhiteLogo.svg"}
         variant="outline"
         onClick={() => oauthSignIn("github")}
       >
