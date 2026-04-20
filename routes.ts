@@ -6,6 +6,7 @@ const ROUTES = {
   POSTS: "/posts",
   NEWS: "/news",
   DISCUSSION: "/discussion",
+  DISCUSSION_CREATE: "/discussion/create",
   REGISTER: "/register",
   LOGIN: "/login",
   LOGOUT: "/logout",

@@ -1,12 +1,13 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #05061b;
   --foreground: #ffffff;
   --primary: #081338;
   --main: #0092ef;
-  --tertiary: #00154A;
-  --card: #070E27;
+  --tertiary: #00154a;
+  --card: #070e27;
 }
 
 @theme inline {
@@ -25,8 +26,8 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --main: #0092ef;
-    --tertiary: #00154A;
-    --card: #070E27;
+    --tertiary: #00154a;
+    --card: #070e27;
   }
 }
 

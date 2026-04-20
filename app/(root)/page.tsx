@@ -1,9 +1,9 @@
 // 'use client'
 import { auth } from "@/auth";
-import Button from "@/components/Button";
+import ButtonLink from "@/components/ButtonLink";
 import Filters from "@/components/Filters";
 import ThreadCard from "@/components/ThreadCard";
-import { toast, Bounce } from "react-toastify";
+import ROUTES from "@/routes";
 
 export default async function page({
   searchParams,
@@ -22,7 +22,9 @@ export default async function page({
           <h1 className="font-extrabold text-3xl text-white">All Threads</h1>
         </div>
         <div>
-          <Button>Create New Thread</Button>
+          <ButtonLink href={ROUTES.DISCUSSION_CREATE}>
+            Create New Thread
+          </ButtonLink>
         </div>
       </div>
       <Filters />
