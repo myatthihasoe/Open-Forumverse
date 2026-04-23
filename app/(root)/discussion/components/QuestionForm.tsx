@@ -44,7 +44,7 @@ export default function QuestionForm() {
           onChange={(v) => setValue(v)}
           label="Discussion Content"
         />
-        {newTag}
+        {/* {newTag} */}
         <Input
           label="Tags"
           text="Please press a new tag!"

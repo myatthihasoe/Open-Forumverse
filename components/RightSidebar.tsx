@@ -95,7 +95,7 @@ export default function RightSidebar() {
           </div>
         </div>
       </div>
-      <div>
+      <div className="mt-4">
         <h1 className="text-xl font-bold">Popular Tags</h1>
         <div className="space-y-3 mt-2 p-2">
           <div className="flex items-center space-x-2 cursor-pointer">
