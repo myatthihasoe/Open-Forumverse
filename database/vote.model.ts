@@ -3,7 +3,7 @@ import { Document, Model, model, models, Schema, Types } from "mongoose";
 export interface VoteType {
   author: Types.ObjectId;
   type_id: Types.ObjectId;
-  type: "question" | "answer";
+  type: "Question" | "Answer";
   voteType: "upvote" | "downvote";
 }
 
@@ -19,11 +19,11 @@ const VoteSchema = new Schema(
     type_id: {
       type: Schema.Types.ObjectId,
       required: true,
-    //   refPath: "type",
+      refPath: "type",
     },
     type: {
       type: String,
-      enum: ["question", "answer"],
+      enum: ["Question", "Answer"],
       required: true,
     },
     voteType: {
@@ -34,6 +34,8 @@ const VoteSchema = new Schema(
   },
   { timestamps: true }
 );
+
+VoteSchema.index({ author: 1, type_id: 1, type: 1 }, { unique: true });
 
 const Vote: Model<VoteType> =
   (models.Vote as Model<VoteType>) || model<VoteType>("Vote", VoteSchema);

@@ -4,7 +4,7 @@ export interface InteractionType {
   user: Types.ObjectId;
   action: string;
   actionId: Types.ObjectId;
-  actionType: "question" | "answer";
+  actionType: "Question" | "Answer";
 }
 
 export interface InteractionDocument extends InteractionType, Document {}
@@ -23,11 +23,11 @@ const InteractionSchema = new Schema(
     actionId: {
       type: Schema.Types.ObjectId,
       required: true,
-    //   refPath: "actionType",
+      refPath: "actionType",
     },
     actionType: {
       type: String,
-      enum: ["question", "answer"],
+      enum: ["Question", "Answer"],
       required: true,
     },
   },
