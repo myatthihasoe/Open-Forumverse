@@ -1,2 +1,0 @@
-D7lnK7hnR9hKtthT 
-myatthihasoe9_db_user
