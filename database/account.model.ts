@@ -40,6 +40,8 @@ const AccountSchema = new Schema(
   { timestamps: true }
 );
 
+AccountSchema.index({ provider: 1, providerAccountId: 1 }, { unique: true });
+
 const Account: Model<AccountType> =
   (models.Account as Model<AccountType>) ||
   model<AccountType>("Account", AccountSchema);
