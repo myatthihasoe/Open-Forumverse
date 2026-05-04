@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import ButtonLink from "@/components/ButtonLink";
 import Filters from "@/components/Filters";
 import ThreadCard from "@/components/ThreadCard";
-import fetchHandler from "@/lib/fetchHandler";
+import { api } from "@/lib/api";
 import ROUTES from "@/routes";
 
 export default async function page({
@@ -13,8 +13,12 @@ export default async function page({
 }) {
   const session = await auth();
   const { filter, search } = await searchParams;
-  const response = await fetchHandler("http://localhost:3000/api/users");
-  console.log("Fetch Response",response)
+
+  // const {data} =  await api.users.getByEmail("testinguser1@gmail.com");
+  // console.log("Fetch Response", data);
+
+  // const response = await api.accounts.getByProvider("testId1");
+  // console.log("Accounts:", response);
   console.log("Github User Data", session);
   console.log("Google user data", session);
 

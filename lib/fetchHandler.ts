@@ -3,6 +3,7 @@ import { handleErrorResponse } from "./response";
 interface FetchOption extends RequestInit {
   timeout?: number;
 }
+
 export default async function fetchHandler(
   url: string,
   options: FetchOption = {}
@@ -35,7 +36,7 @@ export default async function fetchHandler(
     if (!response.ok) {
       throw new Error("HTTP ERROR " + response.status);
     }
-    return response;
+    return await response.json();
   } catch (e) {
     if (e instanceof Error && e.name === "AbortError") {
       throw new Error("Request timed out!");
