@@ -62,4 +62,19 @@ export const api = {
         body: JSON.stringify({ providerAccountId }),
       }),
   },
+  api: {
+    oauthSignin: ({
+      provider,
+      providerAccountId,
+      user,
+    }: {
+      provider: string;
+      providerAccountId: string;
+      user: UserType;
+    }) =>
+      fetchHandler(`${API_URL}/auth/signin-with-oauth`, {
+        method: "POST",
+        body: JSON.stringify({ provider, providerAccountId, user }),
+      }),
+  },
 };
