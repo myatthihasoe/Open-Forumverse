@@ -62,7 +62,7 @@ export const api = {
         body: JSON.stringify({ providerAccountId }),
       }),
   },
-  api: {
+  auth: {
     oauthSignin: ({
       provider,
       providerAccountId,

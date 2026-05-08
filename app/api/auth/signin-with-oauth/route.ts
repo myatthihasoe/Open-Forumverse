@@ -74,7 +74,7 @@ export async function POST(req: Request) {
 
     await session.commitTransaction();
     return handleSuccessResponse(existingUser);
-  } catch (e) {
+  } catch (e: unknown) {
     console.log(e);
     await session.abortTransaction();
     // return handleErrorResponse(e);
