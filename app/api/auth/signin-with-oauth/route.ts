@@ -7,8 +7,8 @@ import validateData from "@/lib/validateData";
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-export async function POST(req: Request) {
-  const { provider, providerAccountId, user } = await req.json();
+export async function POST(request: Request) {
+  const { provider, providerAccountId, user } = await request.json();
   await dbConnect();
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     const existingAccount = await Account.findOne({
-      userId: existingUser?._id,
+      userId: existingUser._id,
       provider,
       providerAccountId,
     }).session(session);
@@ -63,9 +63,11 @@ export async function POST(req: Request) {
       await Account.create(
         [
           {
-            userId: existingUser?._id,
+            userId: existingUser._id,
             provider,
             providerAccountId,
+            name,
+            image,
           },
         ],
         { session }
@@ -73,7 +75,7 @@ export async function POST(req: Request) {
     }
 
     await session.commitTransaction();
-    return handleSuccessResponse(existingUser);
+    return handleSuccessResponse({existingUser});
   } catch (e: unknown) {
     console.log(e);
     await session.abortTransaction();

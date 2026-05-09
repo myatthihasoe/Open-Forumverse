@@ -27,7 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, account }) {
       if (account) {
         const { success, data: accountData } = await api.accounts.getByProvider(
-          account.providerAccountId
+          account?.providerAccountId
         );
         if (!success || !accountData) return token;
         const userId = accountData?.userId;
@@ -38,9 +38,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (token.sub) {
-        session.user.id = token.sub as string;
-      }
+      session.user.id = token.sub as string;
+
       return session;
     },
   },
