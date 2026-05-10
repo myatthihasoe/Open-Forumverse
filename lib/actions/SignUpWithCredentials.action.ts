@@ -2,7 +2,7 @@
 
 import dbConnect from "../dbConnect";
 import mongoose from "mongoose";
-import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
+import { actionError } from "@/lib/response";
 import validateData from "../validateData";
 import User from "@/database/user.model";
 import Account from "@/database/account.model";
@@ -65,10 +65,10 @@ export async function signUpWithCredentials(params: {
 
     await session.commitTransaction();
     await signIn("credentials", { email, password, redirect: false });
-    return handleSuccessResponse(newUser);
+    return { success: true };
   } catch (error) {
     await session.abortTransaction();
-    return handleErrorResponse(error);
+    return actionError(error);
   } finally {
     await session.endSession();
   }

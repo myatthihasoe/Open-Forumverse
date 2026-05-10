@@ -1,9 +1,8 @@
-import Input from "@/components/Input";
 import Image from "next/image";
 import Button from "@/components/Button";
-import AuthForm from "../components/AuthForm";
 import ROUTES from "@/routes";
 import Link from "next/link";
+import RegisterForm from "../components/RegisterForm";
 
 export default function page() {
   return (
@@ -31,27 +30,7 @@ export default function page() {
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">
-        <div className="w-4/5 space-y-6">
-          <h3 className="text-xl font-semibold">
-            Register to Open <span className="text-main">Forumverse</span>
-          </h3>
-          <div>
-            <Input placeholder="Enter your Name" label="Name" />
-          </div>
-          <div>
-            <Input placeholder="Enter your username" label="Username" />
-          </div>
-          <div>
-            <Input placeholder="Enter your email" label="Email Address" />
-          </div>
-          <div>
-            <Input placeholder="Enter your password" label="Password" />
-          </div>
-          <div>
-            <Button>Register</Button>
-          </div>
-          <AuthForm type="Register" />
-        </div>
+        <RegisterForm />
       </div>
     </div>
   );
