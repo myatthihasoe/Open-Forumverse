@@ -4,6 +4,8 @@ import Button from "@/components/Button";
 import AuthForm from "../components/AuthForm";
 import Link from "next/link";
 import ROUTES from "@/routes";
+import AuthenticationForm from "../components/AuthenticationForm";
+import { signInWithCredentials } from "@/lib/actions/SignInWithCredentials";
 
 export default function page() {
   return (
@@ -31,21 +33,7 @@ export default function page() {
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">
-        <div className="w-4/5 space-y-6">
-          <h3 className="text-xl font-semibold">
-            Sign in to Open <span className="text-main">Forumverse</span>
-          </h3>
-          <div>
-            <Input placeholder="Enter your email" label="Email Address" />
-          </div>
-          <div>
-            <Input placeholder="Enter your password" label="Password" />
-          </div>
-          <div>
-            <Button>Login</Button>
-          </div>
-          <AuthForm type="Login" />
-        </div>
+        <AuthenticationForm type="login" submitAction={signInWithCredentials} />
       </div>
     </div>
   );

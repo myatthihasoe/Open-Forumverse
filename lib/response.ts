@@ -1,4 +1,4 @@
-import { FormErrors } from "@/app/(auth)/components/RegisterForm";
+import { FormErrors } from "@/app/(auth)/components/AuthenticationForm";
 import { NextResponse } from "next/server";
 import { success, ZodError } from "zod";
 

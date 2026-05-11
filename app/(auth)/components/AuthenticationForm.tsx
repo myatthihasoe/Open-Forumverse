@@ -3,9 +3,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import React, { useState } from "react";
 import AuthForm from "./AuthForm";
-import { signUpWithCredentials } from "@/lib/actions/SignUpWithCredentials.action";
 import ROUTES from "@/routes";
-import router from "next/router";
 import { useRouter } from "next/navigation";
 interface FormData {
   name: string;
@@ -19,7 +17,14 @@ export interface FormErrors {
   email?: string[];
   password?: string[];
 }
-export default function RegisterForm() {
+export default function AuthenticationForm({
+  type,
+  submitAction,
+}: {
+  type: "login" | "register";
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  submitAction: Function;
+}) {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -31,7 +36,7 @@ export default function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("FormData", formData);
-    const result = await signUpWithCredentials(formData);
+    const result = await submitAction(formData);
     console.log("Form result", result);
     if (result.success) {
       console.log("Success");
@@ -39,51 +44,67 @@ export default function RegisterForm() {
       router.push(ROUTES.HOME);
     } else {
       if ("details" in result && result.details)
-        setErrors(result.details as FormErrors);
+        return setErrors(result.details as FormErrors);
       // console.log("Form Error", result.details);
       if ("message" in result && result.message === "Email Already Exists") {
-        setErrors({
+        return setErrors({
           email: [result.message],
         });
       } else if (
         "message" in result &&
         result.message === "Username Already Exists"
       ) {
-        setErrors({
+        return setErrors({
           username: [result.message],
         });
+      } else if("message" in result && result.message === "User not found!") {
+        return setErrors({
+          email: [result.message]
+        })
       }
+      return setErrors({
+        password: [result.message]
+      })
+      
     }
   };
   return (
     <form className="w-4/5 space-y-6" onSubmit={handleSubmit}>
       <h3 className="text-xl font-semibold">
-        Register to Open <span className="text-main">Forumverse</span>
+        Sign {type === "login" ? "In" : "Up"} to Open{" "}
+        <span className="text-main">Forumverse</span>
       </h3>
-      <div>
-        <Input
-          placeholder="Enter your Name"
-          label="Name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        />
-        {errors?.name && (
-          <p className="my-2 text-xs text-red-400">{errors.name[0]}</p>
-        )}
-      </div>
-      <div>
-        <Input
-          placeholder="Enter your username"
-          label="Username"
-          value={formData.username}
-          onChange={(e) =>
-            setFormData({ ...formData, username: e.target.value })
-          }
-        />
-        {errors?.username && (
-          <p className="my-2 text-xs text-red-400">{errors.username[0]}</p>
-        )}
-      </div>
+      {type === "register" && (
+        <>
+          <div>
+            <Input
+              placeholder="Enter your Name"
+              label="Name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+            {errors?.name && (
+              <p className="my-2 text-xs text-red-400">{errors.name[0]}</p>
+            )}
+          </div>
+          <div>
+            <Input
+              placeholder="Enter your username"
+              label="Username"
+              value={formData.username}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
+            />
+            {errors?.username && (
+              <p className="my-2 text-xs text-red-400">{errors.username[0]}</p>
+            )}
+          </div>
+        </>
+      )}
+
       <div>
         <Input
           placeholder="Enter your email"
@@ -109,9 +130,12 @@ export default function RegisterForm() {
         )}
       </div>
       <div>
-        <Button type="submit">Register</Button>
+        <Button type="submit">
+          {type === "login" ? "Login" : "Register"}
+        </Button>
       </div>
-      <AuthForm type="Register" />
+
+      <AuthForm type={type === "login" ? "Login" : "Register"} />
     </form>
   );
 }
