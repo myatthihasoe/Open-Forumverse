@@ -1,5 +1,6 @@
+import { FormErrors } from "@/app/(auth)/components/AuthenticationForm";
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { success, ZodError } from "zod";
 
 const handleSuccessResponse = (data: unknown, status: number = 200) => {
   return NextResponse.json(
@@ -14,7 +15,8 @@ const handleSuccessResponse = (data: unknown, status: number = 200) => {
 
 const handleErrorResponse = (error: unknown) => {
   let status = 500;
-  let message = error instanceof Error ? error.message : "Internal Server Error";
+  let message =
+    error instanceof Error ? error.message : "Internal Server Error";
   let details = null;
   if (error instanceof ZodError) {
     details = error.flatten().fieldErrors;
@@ -32,4 +34,19 @@ const handleErrorResponse = (error: unknown) => {
   );
 };
 
-export { handleSuccessResponse, handleErrorResponse };
+const actionError = (error: unknown) => {
+  let message =
+    error instanceof Error ? error.message : "Internal Server Error";
+  let details = null;
+  if (error instanceof ZodError) {
+    details = error.flatten().fieldErrors;
+    message = "Bad Request";
+  }
+  return {
+    message,
+    success: false,
+    details,
+  };
+};
+
+export { handleSuccessResponse, handleErrorResponse, actionError };

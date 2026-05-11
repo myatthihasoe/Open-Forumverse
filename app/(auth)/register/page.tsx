@@ -1,9 +1,9 @@
-import Input from "@/components/Input";
 import Image from "next/image";
 import Button from "@/components/Button";
-import AuthForm from "../components/AuthForm";
 import ROUTES from "@/routes";
 import Link from "next/link";
+import AuthenticationForm from "../components/AuthenticationForm";
+import { signUpWithCredentials } from "@/lib/actions/SignUpWithCredentials.action";
 
 export default function page() {
   return (
@@ -12,7 +12,7 @@ export default function page() {
         <div className="space-y-10">
           <Link href={ROUTES.HOME} className="flex items-center space-x-4">
             <Image
-              src={"/images/profile.jpg"}
+              src={"/images/Copilot_Icon_White.svg"}
               alt="register-image"
               width={100}
               height={100}
@@ -31,27 +31,7 @@ export default function page() {
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">
-        <div className="w-4/5 space-y-6">
-          <h3 className="text-xl font-semibold">
-            Register to Open <span className="text-main">Forumverse</span>
-          </h3>
-          <div>
-            <Input placeholder="Enter your Name" label="Name" />
-          </div>
-          <div>
-            <Input placeholder="Enter your username" label="Username" />
-          </div>
-          <div>
-            <Input placeholder="Enter your email" label="Email Address" />
-          </div>
-          <div>
-            <Input placeholder="Enter your password" label="Password" />
-          </div>
-          <div>
-            <Button>Register</Button>
-          </div>
-          <AuthForm type="Register" />
-        </div>
+        <AuthenticationForm type="register" submitAction={signUpWithCredentials} />
       </div>
     </div>
   );
