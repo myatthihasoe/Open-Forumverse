@@ -6,7 +6,11 @@ import { GiNewspaper } from "react-icons/gi";
 import { FaUserTag } from "react-icons/fa";
 import { MdOutlinePostAdd, MdQuestionAnswer } from "react-icons/md";
 import ROUTES from "@/routes";
-export default function LeftSidebar() {
+import { redirect } from "next/navigation";
+import { auth, signOut } from "@/auth";
+export default async function LeftSidebar() {
+  const session = await auth();
+  const user = session?.user;
   return (
     <div className="md:w-1/5 px-5 py-2">
       <ul className="flex flex-col justify-center space-y-5">
@@ -64,15 +68,36 @@ export default function LeftSidebar() {
             <span>Posts</span>
           </Link>
         </li>
-        <li className="bg-red-500/70 rounded-xl px-3 py-3 ">
-          <Link
-            href={ROUTES.LOGOUT}
-            className="flex items-center text-[16px] font-bold space-x-4"
-          >
-            <RiLogoutCircleLine />
-            <span>Logout</span>
-          </Link>
-        </li>
+        {!user && (
+           <li className="rounded-xl border-2 border-main p-3">
+            <Link
+              href={ROUTES.LOGIN}
+              className="flex items-center space-x-4 text-[16px] font-bold"
+            >
+              <FaHome />
+              <span>Login</span>
+            </Link>
+          </li>
+        )}
+        {user && (
+          <li className="bg-red-500/70 rounded-xl px-3 py-3 ">
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirect: false });
+                return redirect(ROUTES.LOGIN);
+              }}
+            >
+              <button
+                type="submit"
+                className="flex items-center text-[16px] font-bold space-x-4"
+              >
+                <RiLogoutCircleLine />
+                <span>Logout</span>
+              </button>
+            </form>
+          </li>
+        )}
       </ul>
     </div>
   );
