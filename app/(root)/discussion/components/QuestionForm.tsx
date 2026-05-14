@@ -3,16 +3,26 @@ import Button from "@/components/Button";
 import Editor from "@/components/Editor";
 import Input from "@/components/Input";
 import TagCard from "@/components/TagCard";
+import { QuestionWithTagsType } from "@/database/question.model";
 import { QuestionCreate } from "@/lib/actions/QuestionCreate.action";
 import ROUTES from "@/routes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { QuestionEdit } from "@/lib/actions/QuestionEdit.action";
 import { toast, Bounce } from "react-toastify";
 
-export default function QuestionForm() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>(["NextJs", "React", "Vue"]);
+export default function QuestionForm({
+  question,
+  isEdit = false,
+}: {
+  question?: QuestionWithTagsType;
+  isEdit?: boolean;
+}) {
+  const [title, setTitle] = useState(question?.title ?? "");
+  const [content, setContent] = useState(question?.content ?? "");
+  const [tags, setTags] = useState<string[]>(
+    question?.tags?.map((tag) => tag?.name) ?? []
+  );
   const [newTag, setNewTag] = useState("");
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -40,6 +50,31 @@ export default function QuestionForm() {
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      if (isEdit && question) {
+        const result = await QuestionEdit({
+          questionId: String(question._id),
+          title,
+          content,
+          tags,
+        });
+        if (result.success && result.data) {
+          toast.success("Question Updated successfully.", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+          return router.push(
+            ROUTES.DISCUSSION_DETAIL(String(result.data?._id))
+          );
+        }
+        return;
+      }
       const result = await QuestionCreate({
         title,
         content,
@@ -57,7 +92,7 @@ export default function QuestionForm() {
           theme: "colored",
           transition: Bounce,
         });
-        return router.push(ROUTES.DISCUSSION_DETAIL(result.data?._id));
+        return router.push(ROUTES.DISCUSSION_DETAIL(String(result.data?._id)));
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -90,7 +125,6 @@ export default function QuestionForm() {
           value={content}
           onChange={(v) => setContent(v)}
           label="Discussion Content"
-          
         />
         {/* {newTag} */}
         <Input
@@ -107,7 +141,9 @@ export default function QuestionForm() {
             </TagCard>
           ))}
         </div>
-        <Button type="submit">Create New Discussion</Button>
+        <Button type="submit">
+          {isEdit ? "Update" : "Create New"} Discussion
+        </Button>
       </form>
     </>
   );
