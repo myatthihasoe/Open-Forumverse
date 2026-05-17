@@ -72,7 +72,8 @@ export async function QuestionEdit(params: {
     const tagQuestionDocuments = [];
 
     //Helper to escape regex special characters
-    const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapeRegex = (str: string) =>
+      str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
