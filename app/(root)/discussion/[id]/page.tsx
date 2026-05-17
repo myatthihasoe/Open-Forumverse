@@ -1,4 +1,5 @@
-export default async function page({params}: {params: {id: string}}) {
-    // console.log("params:",params.id)
-  return <div>Discussion Detail: {params.id}</div>;
+export default async function page({params}: {params: Promise<{id: string}>}) {
+  const {id}=await params;
+    
+  return <div>Discussion Detail: {id}</div>;
 }

@@ -1,6 +1,8 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
+import { TagType } from "./tag.model";
 
 export interface QuestionType {
+  _id: string | Types.ObjectId;
   title: string;
   content: string;
   tags: Types.ObjectId[];
@@ -9,9 +11,15 @@ export interface QuestionType {
   downvotes: number;
   answers: number;
   author: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface QuestionDocument extends QuestionType, Document {}
+export interface QuestionWithTagsType extends Omit<QuestionType, "tags"> {
+  tags: (TagType & { _id: string | Types.ObjectId })[];
+}
+
+// export interface QuestionDocument extends QuestionType, Document {}
 
 const QuestionSchema = new Schema(
   {

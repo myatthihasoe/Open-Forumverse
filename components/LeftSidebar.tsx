@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaHome } from "react-icons/fa";
-import { RiLogoutCircleLine } from "react-icons/ri";
+import { RiLoginCircleLine, RiLogoutCircleLine } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
 import { GiNewspaper } from "react-icons/gi";
 import { FaUserTag } from "react-icons/fa";
@@ -69,12 +69,12 @@ export default async function LeftSidebar() {
           </Link>
         </li>
         {!user && (
-           <li className="rounded-xl border-2 border-main p-3">
+          <li className="rounded-xl border-2 border-main p-3">
             <Link
               href={ROUTES.LOGIN}
               className="flex items-center space-x-4 text-[16px] font-bold"
             >
-              <FaHome />
+              <RiLoginCircleLine />
               <span>Login</span>
             </Link>
           </li>

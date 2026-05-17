@@ -4,7 +4,7 @@ import QuestionForm from "../components/QuestionForm";
 export default function page() {
   return (
     <div>
-      <QuestionForm />
+      <QuestionForm isEdit={false} />
     </div>
   );
 }
