@@ -2,7 +2,8 @@
 import Button from "@/components/Button";
 import Editor from "@/components/Editor";
 import Input from "@/components/Input";
-import TagCard from "@/components/TagCard";
+import TagCard from "@/components/RemovableTagCard";
+import RemovableTagCard from "@/components/RemovableTagCard";
 import { QuestionWithTagsType } from "@/database/question.model";
 import { QuestionCreate } from "@/lib/actions/QuestionCreate.action";
 import ROUTES from "@/routes";
@@ -24,15 +25,19 @@ export default function QuestionForm({
     question?.tags?.map((tag) => tag?.name) ?? []
   );
   const [newTag, setNewTag] = useState("");
+  // const [error, setError] = useState("");
+
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (!tags.includes(newTag)) {
         setTags([...tags, newTag]);
         setNewTag("");
+        // setError("");
+        e.preventDefault();
       } else {
-        toast.error("Tag already exists!", {
-          position: "bottom-right",
-          autoClose: 2000,
+        toast.error(`${newTag} already exists!`, {
+          position: "bottom-left",
+          autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
@@ -41,6 +46,8 @@ export default function QuestionForm({
           theme: "colored",
           transition: Bounce,
         });
+        // setError("Tag already exists");
+        e.preventDefault();
       }
     }
   };
@@ -111,6 +118,12 @@ export default function QuestionForm({
     }
   };
 
+  // const removeTag = (tag:string)=>{
+  //   setTags((prevTags)=>{
+  //     return prevTags.filter(t=>t!==tag)
+  //   })
+  // }
+
   return (
     <>
       <form className="space-y-5" onSubmit={submit}>
@@ -129,16 +142,23 @@ export default function QuestionForm({
         {/* {newTag} */}
         <Input
           label="Tags"
-          text="Please press a new tag!"
+          text="Please press a new tag"
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}
           onKeyDown={handleTagKeyDown}
         />
-        <div className="mt-5 space-x-2">
+        {/* {error && <p className="text-sm text-red-600">{error}</p>} */}
+        <div className="mt-5 space-x-2 flex">
           {tags.map((tag, index) => (
-            <TagCard key={index} href={`/?filter=${tag}`}>
+            <RemovableTagCard
+              key={index}
+              // onRemove={()=> removeTag(tag)}
+              onRemove={() =>
+                setTags((prevTags) => prevTags.filter((t) => t !== tag))
+              }
+            >
               {tag}
-            </TagCard>
+            </RemovableTagCard>
           ))}
         </div>
         <Button type="submit">
