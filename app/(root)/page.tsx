@@ -3,24 +3,27 @@ import { auth } from "@/auth";
 import ButtonLink from "@/components/ButtonLink";
 import Filters from "@/components/Filters";
 import ThreadCard from "@/components/ThreadCard";
+import { GetDiscussion } from "@/lib/actions/GetDiscussion.action";
 import { api } from "@/lib/api";
 import ROUTES from "@/routes";
 
 export default async function page({
   searchParams,
 }: {
-  searchParams: { search: string | null; filter: string | null };
+  searchParams: Promise<{ [key: string]: string }>;
 }) {
   const session = await auth();
-  const { filter, search } = await searchParams;
+  const { page, pageSize, filter, search } = await searchParams;
 
-  // const {data} =  await api.users.getByEmail("testinguser1@gmail.com");
-  // console.log("Fetch Response", data);
+  const {success, data, message, details} = await GetDiscussion({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter: filter || "",
+    search: search || "",
+  });
 
-  // const response = await api.accounts.getByProvider("testId1");
-  // console.log("Accounts:", response);
-  console.log("Github User Data", session);
-  console.log("Google user data", session);
+  const {questions} = data || {}
+
 
   return (
     <>
@@ -34,8 +37,17 @@ export default async function page({
           </ButtonLink>
         </div>
       </div>
-      <Filters />
-      <ThreadCard />
+      <Filters /> {
+        success && data ? (
+          questions?.length ? questions?.map((question,i) => (
+            <ThreadCard key={i} question={question} />
+          )): (
+            <div className="text-center text-[22px] text-gray-400 mt-40">No threads found !</div>
+          )
+        ) : (
+          <div className="text-red-400 text-center">{message}</div>
+        )
+      }
     </>
   );
 }
