@@ -82,7 +82,7 @@ export async function GetDiscussion(params: {
     const error = e as Error;
     return {
       success: false,
-      message: "Failed to fetch discussions",
+      message: "Failed to fetch discussions!!",
       details: error.message
     };
   }
