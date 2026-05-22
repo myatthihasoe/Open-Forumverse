@@ -4,7 +4,7 @@ import Question, { QuestionWithTagsType } from "@/database/question.model";
 import dbConnect from "../dbConnect";
 import validateData from "../validateData";
 import PaginatedSearchParamsSchema from "../schemas/PaginatedSearchParamsSchema";
-import mongoose from "mongoose";
+import { QueryFilter } from "mongoose";
 import { actionError } from "../response";
 
 export async function GetDiscussion(params: {
@@ -28,7 +28,7 @@ export async function GetDiscussion(params: {
   const skip = (Number(page) - 1) * Number(pageSize);
   const limit = Number(pageSize);
 
-  const filterQuery: mongoose.QueryFilter<typeof Question> = {}; //filter query mongoose fix error
+  const filterQuery: QueryFilter<typeof Question> = {}; //filter query mongoose fix error
 
   if (filter === "recommended") {
     return { success: true, data: { questions: [], isNext: false } };
