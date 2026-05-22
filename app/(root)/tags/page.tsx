@@ -37,7 +37,12 @@ async function page({
           return (
             <div className="grid grid-cols-4 gap-4">
               {tags.map((tag, i) => (
-                <TagInfoCard key={i} name={tag.name} count={tag.questions} />
+                <TagInfoCard
+                  key={i}
+                  id={tag._id.toString()}
+                  name={tag.name}
+                  count={tag.questions}
+                />
               ))}
             </div>
           );

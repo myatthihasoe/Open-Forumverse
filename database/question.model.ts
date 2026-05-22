@@ -19,7 +19,7 @@ export interface QuestionWithTagsType extends Omit<QuestionType, "tags"> {
   tags: (TagType & { _id: string | Types.ObjectId })[];
 }
 
-// export interface QuestionDocument extends QuestionType, Document {}
+export interface QuestionDocument extends Omit<QuestionType, '_id'>, Document {}
 
 const QuestionSchema = new Schema(
   {
