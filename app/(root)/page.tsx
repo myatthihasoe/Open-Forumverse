@@ -1,6 +1,7 @@
 // 'use client'
 import { auth } from "@/auth";
 import ButtonLink from "@/components/ButtonLink";
+import DataRenderer from "@/components/DataRenderer";
 import Filters from "@/components/Filters";
 import ThreadCard from "@/components/ThreadCard";
 import { GetDiscussion } from "@/lib/actions/GetDiscussion.action";
@@ -22,7 +23,7 @@ export default async function page({
     search: search || "",
   });
 
-  const {questions} = data || {}
+  const {questions = []} = data || {}
 
 
   return (
@@ -37,17 +38,14 @@ export default async function page({
           </ButtonLink>
         </div>
       </div>
-      <Filters /> {
-        success && data ? (
-          questions?.length ? questions?.map((question,i) => (
+      <Filters />
+      <DataRenderer 
+        success={success}
+        data={questions}
+        errorMessage={message}
+          render={(questions) => questions?.map((question,i) => (
             <ThreadCard key={i} question={question} />
-          )): (
-            <div className="text-center text-[22px] text-gray-400 mt-40">No threads found !</div>
-          )
-        ) : (
-          <div className="text-red-400 text-center">{message}</div>
-        )
-      }
+          ))} />
     </>
   );
 }
