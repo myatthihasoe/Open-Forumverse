@@ -1,15 +1,15 @@
 import React from "react";
 
-export default function DataRenderer({
+export default function DataRenderer<T>({
   success,
   data,
   errorMessage,
   render,
 }: {
   success: boolean;
-  data: any[];
+  data: T[];
   errorMessage?: string | undefined;
-  render: (data: any[]) => React.ReactNode;
+  render: (data: T[]) => React.ReactNode;
 }) {
   if (!success) {
     return (

@@ -5,7 +5,7 @@ import dbConnect from "../dbConnect";
 import GetTagQuestionSchema from "../schemas/GetTagQuestionSchema";
 import validateData from "../validateData";
 import { QueryFilter } from "mongoose";
-import Question, { QuestionDocument } from "@/database/question.model";
+import Question, { QuestionFullType } from "@/database/question.model";
 import { actionError } from "../response";
 
 const getTagQuestions = async (params: {
@@ -18,7 +18,7 @@ const getTagQuestions = async (params: {
   success: boolean;
   data?: {
     tag: TagDocument;
-    questions: QuestionDocument[];
+    questions: QuestionFullType[];
     isNext: boolean;
   };
   message?: string;
@@ -47,8 +47,8 @@ const getTagQuestions = async (params: {
 
     const questions = await Question.find(filterQuery)
       .select("_id title views answers upvotes downvotes author createdAt")
-      .populate("author", "name image")
-      .populate("tags", "name")
+      .populate("author")
+      .populate("tags")
       .lean()
       .skip(skip)
       .limit(limit);

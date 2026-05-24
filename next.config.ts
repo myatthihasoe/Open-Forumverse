@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+        // pathname: "/a/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        // pathname: "/u/**", // Optional, but limits access specifically to user avatar paths for extra security
       },
     ],
   },
