@@ -1,8 +1,11 @@
-import { Document, Model, model, models, Schema } from "mongoose";
+import { Document, Model, model, models, Schema, Types } from "mongoose";
 
 export interface TagType {
+  _id?: string | Types.ObjectId;
   name: string;
   questions: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface TagDocument extends TagType, Document {}

@@ -1,0 +1,66 @@
+"use server";
+
+import mongoose from "mongoose";
+import Answer, { AnswerDocument } from "@/database/answer.model";
+import dbConnect from "../dbConnect";
+import { actionError } from "../response";
+import Question from "@/database/question.model";
+import validateData from "../validateData";
+import AnswerCreateSchema from "../schemas/AnswerCreateSchema";
+import { auth } from "@/auth";
+
+const AnswerCreate = async (params: {
+  questionId: string;
+  content: string;
+}): Promise<{
+  success: boolean;
+  data?: { newAnswer: AnswerDocument };
+  message?: string;
+  details?: object | null;
+}> => {
+  await dbConnect();
+  const validatedData = validateData(params, AnswerCreateSchema);
+  const { questionId, content } = validatedData.data;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const authSession = await auth();
+    const userId = authSession?.user?.id;
+    if (!userId) {
+      return { success: false, message: "Unauthorized", details: null };
+    }
+    const question = await Question.findById(questionId);
+    if (!question) throw new Error("Question not found");
+
+    const [newAnswer] = await Answer.create(
+      [
+        {
+          author: userId,
+          question: questionId,
+          content,
+        },
+      ],
+      { session }
+    );
+
+    question.answers += 1;
+    await question.save({ session });
+    await session.commitTransaction();
+
+    return {
+      success: true,
+      data: {
+        newAnswer: JSON.parse(JSON.stringify(newAnswer)),
+      },
+    };
+  } catch (e) {
+    await session.abortTransaction();
+    return actionError(e);
+  } finally {
+    await session.endSession();
+  }
+};
+
+export default AnswerCreate;

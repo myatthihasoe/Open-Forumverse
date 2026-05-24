@@ -1,6 +1,7 @@
-import { Document, Model, model, models, Schema } from "mongoose";
+import { Document, Model, model, models, Schema, Types } from "mongoose";
 
 export interface UserType {
+  _id?: string | Types.ObjectId;
   name: string;
   username: string;
   email: string;
@@ -9,9 +10,11 @@ export interface UserType {
   location?: string;
   portfolio?: string;
   reputation?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface UserDocument extends UserType, Document {}
+// export interface UserDocument extends UserType, Document {}
 
 const UserSchema = new Schema(
   {

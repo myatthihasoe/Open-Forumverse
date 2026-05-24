@@ -39,7 +39,7 @@ async function page({
               {tags.map((tag, i) => (
                 <TagInfoCard
                   key={i}
-                  id={tag._id.toString()}
+                  id={String(tag._id)}
                   name={tag.name}
                   count={tag.questions}
                 />

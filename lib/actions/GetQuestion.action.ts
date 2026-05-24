@@ -21,7 +21,7 @@ export async function GetQuestion(params: { questionId: string }): Promise<{
       path: "tags",
       model: Tag, // Passing the actual model object instead of a string
     }); 
-    console.log("Question:", question);
+    // console.log("Question:", question);
     if (!question) {
       throw new Error("Question not found");
     }

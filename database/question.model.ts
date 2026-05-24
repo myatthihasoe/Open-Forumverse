@@ -1,8 +1,9 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
 import { TagType } from "./tag.model";
+import { UserType } from "./user.model";
 
 export interface QuestionType {
-  _id: string | Types.ObjectId;
+  _id?: string | Types.ObjectId;
   title: string;
   content: string;
   tags: Types.ObjectId[];
@@ -11,15 +12,27 @@ export interface QuestionType {
   downvotes: number;
   answers: number;
   author: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface QuestionWithTagsType extends Omit<QuestionType, "tags"> {
-  tags: (TagType & { _id: string | Types.ObjectId })[];
+  tags: (TagType & { _id?: string | Types.ObjectId })[];
 }
 
-export interface QuestionDocument extends Omit<QuestionType, '_id'>, Document {}
+export interface QuestionWithAuthorType extends Omit<QuestionType, "author"> {
+  author: UserType & { _id?: string | Types.ObjectId };
+}
+
+export interface QuestionFullType extends Omit<
+  QuestionType,
+  "tags" | "author"
+> {
+  tags: (TagType & { _id?: string | Types.ObjectId })[];
+  author: UserType & { _id?: string | Types.ObjectId };
+}
+
+// export interface QuestionDocument extends QuestionType, Document {}
 
 const QuestionSchema = new Schema(
   {

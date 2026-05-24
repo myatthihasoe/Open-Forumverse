@@ -1,6 +1,6 @@
 "use server";
 
-import Question, { QuestionWithTagsType } from "@/database/question.model";
+import Question, { QuestionFullType } from "@/database/question.model";
 import dbConnect from "../dbConnect";
 import validateData from "../validateData";
 import PaginatedSearchParamsSchema from "../schemas/PaginatedSearchParamsSchema";
@@ -15,7 +15,7 @@ export async function GetDiscussion(params: {
   sort?: string;
 }): Promise<{
   data?: {
-    questions: QuestionWithTagsType[];
+    questions: QuestionFullType[];
     isNext: boolean;
   };
   success: boolean;
@@ -62,8 +62,8 @@ export async function GetDiscussion(params: {
   try {
     const totalQuestions = await Question.countDocuments(filterQuery);
     const questions = await Question.find(filterQuery)
-      .populate("tags", "name")
-      .populate("author", "name image")
+      .populate({ path: "tags", select: "name" })
+      .populate({ path: "author", select: "name image" })
       .lean()
       .sort(sortCriteria)
       .skip(skip)
@@ -83,7 +83,7 @@ export async function GetDiscussion(params: {
     return {
       success: false,
       message: "Failed to fetch discussions!!",
-      details: error.message
+      details: error.message,
     };
   }
 }
