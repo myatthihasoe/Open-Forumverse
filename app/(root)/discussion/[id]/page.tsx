@@ -102,7 +102,7 @@ export default async function page({
   // };
 
   if (!question) notFound();
-  console.log("Question Markdown", question.content);
+  // console.log("Question Markdown", question.content);
 
   return (
     <div className="p-3">

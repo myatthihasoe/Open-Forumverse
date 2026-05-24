@@ -10,10 +10,13 @@ import { Bounce, toast } from "react-toastify";
 
 function AnswerForm({ questionId }: { questionId: string }) {
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      e.preventDefault();
       const { success, data } = await AnswerCreate({
         questionId,
         content,
@@ -32,6 +35,17 @@ function AnswerForm({ questionId }: { questionId: string }) {
         });
         return router.push(ROUTES.DISCUSSION_DETAIL(questionId));
       }
+      toast.error("Could not submit your answer. Please try again.", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message, {
@@ -46,6 +60,8 @@ function AnswerForm({ questionId }: { questionId: string }) {
           transition: Bounce,
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -59,7 +75,9 @@ function AnswerForm({ questionId }: { questionId: string }) {
       </div>
       <div className="flex justify-end">
         <div className="max-w-48">
-          <Button type="submit">Submit Answer</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            + {isSubmitting ? "Submitting..." : "Submit Answer"}+{" "}
+          </Button>
         </div>
       </div>
     </form>

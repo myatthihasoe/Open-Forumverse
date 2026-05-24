@@ -30,9 +30,8 @@ export default function DataRenderer<T>({
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-white mb-2">
-          Oops! {errorMessage} !!
+          Oops! {errorMessage || "Something went wrong."}
         </h3>
-        
       </div>
     );
   }

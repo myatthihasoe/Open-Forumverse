@@ -47,8 +47,8 @@ const getTagQuestions = async (params: {
 
     const questions = await Question.find(filterQuery)
       .select("_id title views answers upvotes downvotes author createdAt")
-      .populate("author")
-      .populate("tags")
+      .populate({ path: "author", select: "name image" })
+      .populate({ path: "tags", select: "name" })
       .lean()
       .skip(skip)
       .limit(limit);

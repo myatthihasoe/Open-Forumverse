@@ -13,15 +13,17 @@ export default function ThreadCard({
 }: {
   question: QuestionFullType;
 }) {
+  const discussionId = question._id ? String(question._id) : null;
   return (
     <div className="bg-card rounded-xl px-10 py-5 space-y-7 my-3">
       <div>
-        <Link
-          href={ROUTES.DISCUSSION_DETAIL(question._id as string)}
-          className="hover:text-main"
-        >
+         {discussionId ? (
+          <Link href={ROUTES.DISCUSSION_DETAIL(discussionId)} className="hover:text-main">
+            <h1 className="text-xl font-bold">{question.title}</h1>
+          </Link>
+        ) : (
           <h1 className="text-xl font-bold">{question.title}</h1>
-        </Link>
+        )}
       </div>
       <div className="space-x-3">
         {question.tags?.map((tag, i) => (

@@ -62,8 +62,8 @@ export async function GetDiscussion(params: {
   try {
     const totalQuestions = await Question.countDocuments(filterQuery);
     const questions = await Question.find(filterQuery)
-      .populate("tags")
-      .populate("author")
+      .populate({ path: "tags", select: "name" })
+      .populate({ path: "author", select: "name image" })
       .lean()
       .sort(sortCriteria)
       .skip(skip)
@@ -83,7 +83,7 @@ export async function GetDiscussion(params: {
     return {
       success: false,
       message: "Failed to fetch discussions!!",
-      details: error.message
+      details: error.message,
     };
   }
 }

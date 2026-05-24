@@ -13,11 +13,12 @@ export async function incrementViews(params: { questionId: string }): Promise<{
   const { questionId } = validatedData.data;
 
   try {
-    const question = await Question.findById(questionId);
+    const question = await Question.findByIdAndUpdate(
+      questionId,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
     if (!question) throw new Error("Question not found");
-
-    question.views += 1;
-    await question.save();
 
     return {
       success: true,

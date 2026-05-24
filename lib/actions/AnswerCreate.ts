@@ -26,8 +26,11 @@ const AnswerCreate = async (params: {
   session.startTransaction();
 
   try {
-    const auth_session = await auth();
-    const userId = auth_session?.user?.id;
+    const authSession = await auth();
+    const userId = authSession?.user?.id;
+    if (!userId) {
+      return { success: false, message: "Unauthorized", details: null };
+    }
     const question = await Question.findById(questionId);
     if (!question) throw new Error("Question not found");
 
@@ -53,7 +56,7 @@ const AnswerCreate = async (params: {
       },
     };
   } catch (e) {
-    session.abortTransaction();
+    await session.abortTransaction();
     return actionError(e);
   } finally {
     await session.endSession();
