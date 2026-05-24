@@ -1,13 +1,19 @@
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
 import { GetQuestion } from "@/lib/actions/GetQuestion.action";
+import { incrementViews } from "@/lib/actions/IncrementView";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 
 export default async function page({ params }: { params: { id: string } }) {
   const { id } = await params;
   const { data: question, success } = await GetQuestion({
     questionId: id,
   });
+
+  after(async ()=>{
+    await incrementViews({questionId: id})
+  })
 
   // const question = {
   //   id: "q123",
