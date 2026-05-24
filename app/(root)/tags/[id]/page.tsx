@@ -28,7 +28,7 @@ export default async function page({
   });
 
   const { questions = [], tag } = data || {};
-  console.log("Questions:", questions)
+  // console.log("Questions:", questions)
   console.log("Tag:", tag);
 
   return (
