@@ -30,12 +30,9 @@ export default function DataRenderer<T>({
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-white mb-2">
-          Oops! Something went wrong
+          Oops! {errorMessage} !!
         </h3>
-        <p className="text-gray-600 text-center max-w-md">
-          {errorMessage ||
-            "We encountered an unexpected error. Please try again later."}
-        </p>
+        
       </div>
     );
   }
@@ -58,7 +55,7 @@ export default function DataRenderer<T>({
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-white mb-2">
-          No results found
+          No results found !!
         </h3>
         <p className="text-gray-600 text-center max-w-md">
           We can not find any data matching your criteria. Try adjusting your

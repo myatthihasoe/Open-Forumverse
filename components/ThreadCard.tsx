@@ -5,14 +5,29 @@ import { FaMessage } from "react-icons/fa6";
 import { FaShareSquare } from "react-icons/fa";
 import TagCard from "./TagCard";
 import { QuestionFullType } from "@/database/question.model";
+import ROUTES from "@/routes";
+import Link from "next/link";
 
-export default function ThreadCard({ question }: { question: QuestionFullType }) {
+export default function ThreadCard({
+  question,
+}: {
+  question: QuestionFullType;
+}) {
   return (
     <div className="bg-card rounded-xl px-10 py-5 space-y-7 my-3">
-      <h1 className="text-xl font-bold">{question.title}</h1>
+      <div>
+        <Link
+          href={ROUTES.DISCUSSION_DETAIL(question._id as string)}
+          className="hover:text-main"
+        >
+          <h1 className="text-xl font-bold">{question.title}</h1>
+        </Link>
+      </div>
       <div className="space-x-3">
         {question.tags?.map((tag, i) => (
-          <TagCard key={i} href={"/?filter=" + tag.name}>{tag.name}</TagCard>
+          <TagCard key={i} href={"/?filter=" + tag.name}>
+            {tag.name}
+          </TagCard>
         ))}
       </div>
       <div className="flex justify-between items-center">
@@ -24,7 +39,7 @@ export default function ThreadCard({ question }: { question: QuestionFullType })
               width={30}
               height={30}
               className="aspect-square rounded-full"
-              // unoptimized 
+              // unoptimized
             />
           )}
           <span>{question.author?.name} . 3 hr ago</span>
