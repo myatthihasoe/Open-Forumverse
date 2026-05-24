@@ -1,3 +1,4 @@
+"use server";
 import validateData from "@/lib/validateData";
 import IncrementViewSchema from "../schemas/IncrementViewSchema";
 import { actionError } from "../response";

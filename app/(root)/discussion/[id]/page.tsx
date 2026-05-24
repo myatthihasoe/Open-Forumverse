@@ -1,3 +1,4 @@
+import AnswerForm from "@/components/AnswerForm";
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
 import { GetQuestion } from "@/lib/actions/GetQuestion.action";
@@ -5,15 +6,19 @@ import { incrementViews } from "@/lib/actions/IncrementView";
 import { notFound } from "next/navigation";
 import { after } from "next/server";
 
-export default async function page({ params }: { params: { id: string } }) {
+export default async function page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const { data: question, success } = await GetQuestion({
     questionId: id,
   });
 
-  after(async ()=>{
-    await incrementViews({questionId: id})
-  })
+  after(async () => {
+    await incrementViews({ questionId: id });
+  });
 
   // const question = {
   //   id: "q123",
@@ -97,7 +102,7 @@ export default async function page({ params }: { params: { id: string } }) {
   // };
 
   if (!question) notFound();
-  console.log("Question Markdown",question.content)
+  console.log("Question Markdown", question.content);
 
   return (
     <div className="p-3">
@@ -119,6 +124,9 @@ export default async function page({ params }: { params: { id: string } }) {
             {tag.name}
           </TagCard>
         ))}
+      </div>
+      <div className="my-3">
+        <AnswerForm questionId={id} />
       </div>
     </div>
   );
