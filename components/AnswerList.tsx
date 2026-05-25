@@ -1,5 +1,6 @@
 import { AnswerType } from "@/database/answer.model";
-import React from "react";
+import AnswerCard from "./AnswerCard";
+import DataRenderer from "./DataRenderer";
 
 function AnswerList({
   answers,
@@ -12,7 +13,21 @@ function AnswerList({
   errorMessage?: string;
   totalAnswers: number;
 }) {
-  return <div>AnswerList - {totalAnswers}</div>;
+  return (
+    <div className="mt-8">
+      <h3 className="font-bold text-xl">AnswerList - {totalAnswers}</h3>
+      <DataRenderer
+        success={success}
+        errorMessage={errorMessage}
+        data={answers}
+        render={(answers) => {
+          return answers.map((answer, i) => {
+            return <AnswerCard key={i} answer={answer} />;
+          });
+        }}
+      />
+    </div>
+  );
 }
 
 export default AnswerList;

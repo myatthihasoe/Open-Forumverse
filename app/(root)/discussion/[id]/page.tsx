@@ -35,9 +35,9 @@ export default async function page({
 
   const { answers = [], totalAnswers = 0 } = answersData || {};
 
-  if (!answersSuccess) {
-    notFound();
-  }
+  // if (!answersSuccess) {
+  //   notFound();
+  // }
 
   // const question = {
   //   id: "q123",
@@ -148,7 +148,7 @@ export default async function page({
         <AnswerList
           answers={answers}
           totalAnswers={totalAnswers}
-          success={answersSuccess}
+          success={success}
           errorMessage={errorAnswer}
         />
       </div>

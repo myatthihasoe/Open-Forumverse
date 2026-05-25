@@ -25,7 +25,15 @@ lowlight.register("css", css);
 lowlight.register("js", js);
 lowlight.register("ts", ts);
 
-const Editor = ({value, onChange, label}: {value?: string, onChange: (value: string) => void, label?: string}) => {
+const Editor = ({
+  value,
+  onChange,
+  label,
+}: {
+  value?: string;
+  onChange: (value: string) => void;
+  label?: string;
+}) => {
   const editor = useEditor({
     editorProps: {
       attributes: {
@@ -118,7 +126,7 @@ const Editor = ({value, onChange, label}: {value?: string, onChange: (value: str
       }),
     ],
     content: value,
-    onUpdate: ({editor}) => {
+    onUpdate: ({ editor }) => {
       onChange(editor?.getHTML() || "");
     },
     // Don't render immediately on the server to avoid SSR issues
@@ -158,21 +166,24 @@ const Editor = ({value, onChange, label}: {value?: string, onChange: (value: str
 
   return (
     <>
-    {label && <label className="font-bold text-lg">{label}</label>}
+      {label && <label className="font-bold text-lg">{label}</label>}
       <div className="flex space-x-3 bg-primary gap-2 p-2 mt-3">
         <button
+          type="button"
           onClick={() => editor?.chain().focus().toggleBold().run()}
           className={editor?.isActive("bold") ? "text-main" : ""}
         >
           <span className="font-bold">B</span>
         </button>
         <button
+          type="button"
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           className={editor?.isActive("italic") ? "text-main" : ""}
         >
           <FaItalic />
         </button>
         <button
+          type="button"
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 1 }).run()
           }
@@ -183,6 +194,7 @@ const Editor = ({value, onChange, label}: {value?: string, onChange: (value: str
           H1
         </button>
         <button
+          type="button"
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 2 }).run()
           }
@@ -193,6 +205,7 @@ const Editor = ({value, onChange, label}: {value?: string, onChange: (value: str
           H2
         </button>
         <button
+          type="button"
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 3 }).run()
           }
@@ -203,24 +216,28 @@ const Editor = ({value, onChange, label}: {value?: string, onChange: (value: str
           H3
         </button>
         <button
+          type="button"
           onClick={setLink}
           className={editor?.isActive("link") ? "text-main" : ""}
         >
           <FaLink />
         </button>
         <button
+          type="button"
           onClick={() => editor?.chain().focus().toggleBulletList().run()}
           className={editor?.isActive("bulletList") ? "text-main" : ""}
         >
           <FaListUl />
         </button>
         <button
+          type="button"
           onClick={() => editor?.chain().focus().toggleOrderedList().run()}
           className={editor?.isActive("orderedList") ? "text-main" : ""}
         >
           <FaListOl />
         </button>
         <button
+          type="button"
           onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
           className={editor?.isActive("codeBlock") ? "text-main" : ""}
         >
