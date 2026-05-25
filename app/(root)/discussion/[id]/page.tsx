@@ -1,6 +1,8 @@
 import AnswerForm from "@/components/AnswerForm";
+import AnswerList from "@/components/AnswerList";
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
+import GetAnswers from "@/lib/actions/GetAnswers";
 import { GetQuestion } from "@/lib/actions/GetQuestion.action";
 import { incrementViews } from "@/lib/actions/IncrementView";
 import { notFound } from "next/navigation";
@@ -19,6 +21,23 @@ export default async function page({
   after(async () => {
     await incrementViews({ questionId: id });
   });
+
+  const {
+    data: answersData,
+    success: answersSuccess,
+    message: errorAnswer,
+  } = await GetAnswers({
+    questionId: id,
+    page: 1,
+    pageSize: 10,
+    filter: "",
+  });
+
+  const { answers = [], totalAnswers = 0 } = answersData || {};
+
+  // if (!answersSuccess) {
+  //   notFound();
+  // }
 
   // const question = {
   //   id: "q123",
@@ -124,6 +143,14 @@ export default async function page({
             {tag.name}
           </TagCard>
         ))}
+      </div>
+      <div className="my-3">
+        <AnswerList
+          answers={answers}
+          totalAnswers={totalAnswers}
+          success={success}
+          errorMessage={errorAnswer}
+        />
       </div>
       <div className="my-3">
         <AnswerForm questionId={id} />

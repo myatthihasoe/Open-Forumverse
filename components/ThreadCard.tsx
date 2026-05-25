@@ -1,5 +1,4 @@
 import Image from "next/image";
-import profile from "@/public/images/profile.jpg";
 import { AiFillLike } from "react-icons/ai";
 import { FaMessage } from "react-icons/fa6";
 import { FaShareSquare } from "react-icons/fa";
@@ -7,6 +6,7 @@ import TagCard from "./TagCard";
 import { QuestionFullType } from "@/database/question.model";
 import ROUTES from "@/routes";
 import Link from "next/link";
+import { formatRelativeTime } from "@/lib/date";
 
 export default function ThreadCard({
   question,
@@ -44,7 +44,7 @@ export default function ThreadCard({
               // unoptimized
             />
           )}
-          <span>{question.author?.name} . 3 hr ago</span>
+          <span>{question.author?.name}  <i className="text-gray-500 ml-2">{formatRelativeTime(question.createdAt!)}</i></span>
         </div>
         <div className="flex space-x-3 items-center">
           <div className="flex items-center space-x-1 text-[14px] text-gray-300">

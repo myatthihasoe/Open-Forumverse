@@ -21,10 +21,11 @@ function AnswerForm({ questionId }: { questionId: string }) {
         questionId,
         content,
       });
+      setContent("");
       if (success && data) {
         toast.success("Answer submitted successfully.", {
           position: "bottom-right",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
@@ -76,7 +77,7 @@ function AnswerForm({ questionId }: { questionId: string }) {
       <div className="flex justify-end">
         <div className="max-w-48">
           <Button type="submit" disabled={isSubmitting}>
-            + {isSubmitting ? "Submitting..." : "Submit Answer"}+{" "}
+            {isSubmitting ? "Submitting..." : "Submit Answer"}
           </Button>
         </div>
       </div>
