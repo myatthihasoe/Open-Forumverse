@@ -91,7 +91,7 @@ export async function QuestionEdit(params: {
         );
       }
 
-      tagIds.push(existingTag._id);
+      tagIds.push(existingTag._id as mongoose.Types.ObjectId);
       tagQuestionDocuments.push({
         tag: existingTag._id,
         question: question._id,
