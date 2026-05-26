@@ -16,6 +16,8 @@ import js from "highlight.js/lib/languages/javascript";
 import ts from "highlight.js/lib/languages/typescript";
 import html from "highlight.js/lib/languages/xml";
 import "highlight.js/styles/github-dark.css";
+import { Markdown } from "tiptap-markdown";
+import { useEffect } from "react";
 
 // create a lowlight instance with all languages loaded
 const lowlight = createLowlight(all);
@@ -124,14 +126,36 @@ const Editor = ({
       CodeBlockLowlight.configure({
         lowlight,
       }),
+
+      Markdown.configure({
+        html: false, // Disable HTML parsing for security
+      }),
     ],
-    content: value,
+    // content: value,
     onUpdate: ({ editor }) => {
-      onChange(editor?.getHTML() || "");
+      const md = editor?.storage?.markdown?.getMarkdown();
+      if (md !== value) {
+        onChange(md);
+      }
     },
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (!editor) return;
+    if (typeof value !== "string") return;
+
+    try {
+      const md = editor?.storage?.markdown?.getMarkdown();
+
+      if (md !== value) {
+        editor.commands.setContent(value);
+      }
+    } catch (e) {
+      editor.commands.clearContent();
+    }
+  }, [value, editor]);
 
   const setLink = useCallback(() => {
     const previousUrl = editor?.getAttributes("link").href;
