@@ -67,7 +67,7 @@ export default function QuestionForm({
         if (result.success && result.data) {
           toast.success("Question Updated successfully.", {
             position: "bottom-right",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: true,
@@ -90,7 +90,7 @@ export default function QuestionForm({
       if (result.success && result.data) {
         toast.success("Question created successfully.", {
           position: "bottom-right",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
@@ -103,9 +103,9 @@ export default function QuestionForm({
       }
     } catch (e) {
       if (e instanceof Error) {
-        toast.error(e.message, {
+        toast.error("Failed to create question!", {
           position: "bottom-right",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
