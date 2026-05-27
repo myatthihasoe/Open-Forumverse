@@ -5,13 +5,15 @@ export default function Button({
   children,
   icon,
   variant = "normal",
+  type = "submit",
+  className = "",
   ...props
 }: ButtonProps) {
   return (
     <button
       {...props}
-      type="submit"
-      className={`flex w-full space-x-4 px-5 py-2 rounded-lg border-main items-center justify-center border-2 ${variant === "normal" ? "bg-main text-white" : "bg-primary text-white"}`}
+      type={type}
+      className={`flex w-full space-x-4 px-5 py-2 rounded-lg border-main items-center justify-center border-2 disabled:cursor-not-allowed disabled:opacity-60 ${variant === "normal" ? "bg-main text-white" : "bg-primary text-white"} ${className}`}
     >
       {icon && <Image src={icon} alt={`${children}`} width={20} height={20} />}
       <span>{children}</span>
