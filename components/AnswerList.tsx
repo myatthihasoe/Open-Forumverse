@@ -15,7 +15,7 @@ function AnswerList({
 }) {
   return (
     <div className="mt-8">
-      <h3 className="font-bold text-xl">AnswerList - {totalAnswers}</h3>
+      <h3 className="font-bold text-xl">Answer List - {totalAnswers}</h3>
       <DataRenderer
         success={success}
         errorMessage={errorMessage}
