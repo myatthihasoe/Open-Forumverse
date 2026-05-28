@@ -1,4 +1,4 @@
-import { AnswerType } from "@/database/answer.model";
+import { AnswerResponseType } from "@/database/answer.model";
 import AnswerCard from "./AnswerCard";
 import DataRenderer from "./DataRenderer";
 
@@ -8,7 +8,7 @@ function AnswerList({
   errorMessage,
   totalAnswers,
 }: {
-  answers: AnswerType[];
+  answers: AnswerResponseType[];
   success: boolean;
   errorMessage?: string;
   totalAnswers: number;

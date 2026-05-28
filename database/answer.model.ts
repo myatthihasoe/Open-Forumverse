@@ -1,4 +1,5 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
+import { UserType } from "./user.model";
 
 export interface AnswerType {
   author: Types.ObjectId;
@@ -6,6 +7,16 @@ export interface AnswerType {
   content: string;
   upvotes: number;
   downvotes: number;
+}
+
+export interface AnswerResponseType extends Omit<AnswerType, "author"> {
+  _id: string;
+  author:
+    | (UserType & { _id: string | Types.ObjectId })
+    | string
+    | Types.ObjectId;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AnswerDocument extends AnswerType, Document {}

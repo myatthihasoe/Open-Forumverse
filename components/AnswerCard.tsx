@@ -1,9 +1,9 @@
 import PreviewMarkdown from "@/components/PreviewMarkdown";
-import { AnswerType } from "@/database/answer.model";
+import { AnswerResponseType } from "@/database/answer.model";
 import { formatRelativeTime } from "@/lib/date";
 import VoteButtons from "./VoteButton";
 
-function AnswerCard({ answer }: { answer: AnswerType }) {
+function AnswerCard({ answer }: { answer: AnswerResponseType }) {
   const authorName =
     typeof answer.author === "object" && "name" in answer.author
       ? (answer.author.name as string)
@@ -20,13 +20,11 @@ function AnswerCard({ answer }: { answer: AnswerType }) {
           {initial}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+          <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100 gap-5 flex items-center">
             {authorName}
-            <span className="text-gray-500">
-              {" "}
-              answered{" "}
+            <span className="text-gray-500 ">
               {formatRelativeTime(
-                (answer as AnswerType & { createdAt?: string }).createdAt!
+                answer.createdAt
               )}
             </span>
           </p>
@@ -41,8 +39,8 @@ function AnswerCard({ answer }: { answer: AnswerType }) {
         <VoteButtons
           type="answer"
           typeId={answer?._id}
-          initialUpvotes={answer.upvotes}
-          initialDownvotes={answer.downvotes}
+          initialUpvotes={upvotes}
+          initialDownvotes={downvotes}
         />
       </footer>
     </article>
