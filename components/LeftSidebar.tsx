@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUsers } from "react-icons/fa";
 import { RiLoginCircleLine, RiLogoutCircleLine } from "react-icons/ri";
-import { FaStar } from "react-icons/fa";
 import { GiNewspaper } from "react-icons/gi";
 import { FaUserTag } from "react-icons/fa";
 import { MdOutlinePostAdd, MdQuestionAnswer } from "react-icons/md";
@@ -25,11 +24,11 @@ export default async function LeftSidebar() {
         </li>
         <li className="bg-primary rounded-xl px-3 py-3 ">
           <Link
-            href={ROUTES.POPULAR}
+            href={ROUTES.COMMUNITY}
             className="flex items-center text-[16px] font-bold space-x-4"
           >
-            <FaStar />
-            <span>Popular</span>
+            <FaUsers />
+            <span>Community</span>
           </Link>
         </li>
         <li className="bg-primary rounded-xl px-3 py-3 ">

@@ -1,9 +1,11 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
 
+export type VoteTargetType = "Question" | "Answer";
+
 export interface VoteType {
   author: Types.ObjectId;
   type_id: Types.ObjectId;
-  type: "Question" | "Answer";
+  type: VoteTargetType;
   voteType: "upvote" | "downvote";
 }
 

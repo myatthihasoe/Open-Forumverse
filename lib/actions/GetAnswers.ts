@@ -1,10 +1,9 @@
 "use server";
 
 import dbConnect from "../dbConnect";
-import { actionError } from "../response";
 import GetAnswerSchema from "../schemas/GetAnswerSchema";
 import validateData from "../validateData";
-import Answer, { AnswerType } from "@/database/answer.model";
+import Answer, { AnswerResponseType } from "@/database/answer.model";
 
 const GetAnswers = async (params: {
   questionId: string;
@@ -13,7 +12,7 @@ const GetAnswers = async (params: {
   filter: string;
 }): Promise<{
   data?: {
-    answers: AnswerType[];
+    answers: AnswerResponseType[];
     isNext: boolean;
     totalAnswers: number;
   };
