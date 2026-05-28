@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         // pathname: "/u/**", // Optional, but limits access specifically to user avatar paths for extra security
       },
+      {
+        protocol: "https",
+        hostname: "example.com",
+        // pathname: "/images/**", // Optional, but limits access to a specific path for extra security
+      }
     ],
   },
 };
