@@ -23,16 +23,18 @@ const VoteAction = async (params: {
   message?: string;
   details?: object | null;
 }> => {
-  await dbConnect();
-  const validatedData = validateData(params, VoteActionSchema);
-  const { type, typeId, voteType } = validatedData.data;
-  const voteTargetType: VoteTargetType =
-    type === "question" ? "Question" : "Answer";
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  let session: mongoose.ClientSession | null = null;
 
   try {
+    await dbConnect();
+    const validatedData = validateData(params, VoteActionSchema);
+    const { type, typeId, voteType } = validatedData.data;
+    const voteTargetType: VoteTargetType =
+      type === "question" ? "Question" : "Answer";
+
+    session = await mongoose.startSession();
+    session.startTransaction();
+
     const auth_session = await auth();
     const userId = auth_session?.user?.id;
     if (!userId) throw new Error("Unauthorized");
@@ -113,10 +115,12 @@ const VoteAction = async (params: {
       },
     };
   } catch (error) {
-    await session.abortTransaction();
+    if (session?.inTransaction()) {
+      await session.abortTransaction();
+    }
     return actionError(error);
   } finally {
-    await session.endSession();
+    await session?.endSession();
   }
 };
 

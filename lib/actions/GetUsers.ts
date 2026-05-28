@@ -7,6 +7,9 @@ import PaginatedSearchParamsSchema from "../schemas/PaginatedSearchParamsSchema"
 import { QueryFilter } from "mongoose";
 import { actionError } from "../response";
 
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const GetUsers = async (params: {
   page?: number;
   pageSize?: number;
@@ -22,39 +25,40 @@ const GetUsers = async (params: {
   message?: string;
   details?: object | null;
 }> => {
-  await dbConnect();
-  const validatedData = validateData(params, PaginatedSearchParamsSchema);
-  const { page = 1, pageSize = 10, search, filter } = validatedData.data;
-  const skip = (Number(page) - 1) * pageSize;
-  const limit = Number(pageSize);
-
-  const filterQuery: QueryFilter<typeof User> = {};
-
-  if (search) {
-    filterQuery.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  let sortCriteria = {};
-
-  switch (filter) {
-    case "newest":
-      sortCriteria = { createdAt: -1 };
-      break;
-    case "oldest":
-      sortCriteria = { createdAt: 1 };
-      break;
-    case "popular":
-      sortCriteria = { reputation: -1 };
-      break;
-    default:
-      sortCriteria = { createdAt: -1 };
-      break;
-  }
-
   try {
+    await dbConnect();
+    const validatedData = validateData(params, PaginatedSearchParamsSchema);
+    const { page = 1, pageSize = 10, search, filter } = validatedData.data;
+    const skip = (Number(page) - 1) * pageSize;
+    const limit = Number(pageSize);
+
+    const filterQuery: QueryFilter<typeof User> = {};
+
+    if (search) {
+      const safeSearch = escapeRegExp(search);
+      filterQuery.$or = [
+        { name: { $regex: safeSearch, $options: "i" } },
+        { email: { $regex: safeSearch, $options: "i" } },
+      ];
+    }
+
+    let sortCriteria = {};
+
+    switch (filter) {
+      case "newest":
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "oldest":
+        sortCriteria = { createdAt: 1 };
+        break;
+      case "popular":
+        sortCriteria = { reputation: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
+
     const totalUsers = await User.countDocuments(filterQuery);
     const users = await User.find(filterQuery)
       .sort(sortCriteria)

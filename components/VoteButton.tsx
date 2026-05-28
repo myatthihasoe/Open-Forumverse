@@ -20,14 +20,30 @@ function VoteButtons({
   const [downvotes, setDownvotes] = useState(initialDownvotes);
   const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(null);
 
+  const showError = (message: string) => {
+    toast.error(message, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+    });
+  };
+
   useEffect(() => {
     const fetchUserVote = async () => {
-      const { success, data } = await GetUserVote({
-        type,
-        typeId,
-      });
-      if (success && data) {
-        setUserVote(data.userVote);
+      try {
+        const { success, data } = await GetUserVote({
+          type,
+          typeId,
+        });
+        setUserVote(success && data ? data.userVote : null);
+      } catch {
+        setUserVote(null);
       }
     };
     fetchUserVote();
@@ -35,31 +51,24 @@ function VoteButtons({
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     try {
-      const { success, data} = await VoteAction({
+      const { success, data, message } = await VoteAction({
         type,
         typeId,
         voteType,
       });
 
-      if (success) {
-        const { upvotes = 0, downvotes = 0, userVote } = data || {};
-        setUpvotes(upvotes);
-        setDownvotes(downvotes);
-        setUserVote(userVote ?? null);
+      if (!success) {
+        showError(message || "Failed to update vote");
+        return;
       }
+
+      const { upvotes = 0, downvotes = 0, userVote } = data || {};
+      setUpvotes(upvotes);
+      setDownvotes(downvotes);
+      setUserVote(userVote ?? null);
     } catch (e) {
       if (e instanceof Error) {
-        toast.error(e.message, {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        });
+        showError(e.message);
       }
     }
   };

@@ -10,7 +10,7 @@ async function page({
     [key: string]: string;
   }>;
 }) {
-  const session = await auth();
+  await auth();
   const { page, pageSize, search, filter } = await searchParams;
 
   const { success, data, message } = await GetUsers({
@@ -36,8 +36,10 @@ async function page({
         render={(users) => {
           return (
             <div className="grid grid-cols-4 gap-4">
-              {users.map((user, index) => {
-                const userId = user._id?.toString() ?? `user-${index}`;
+              {users.map((user) => {
+                const userId = user._id?.toString() ?? user.username;
+
+                if (!userId) return null;
 
                 return (
                   <UserCard
