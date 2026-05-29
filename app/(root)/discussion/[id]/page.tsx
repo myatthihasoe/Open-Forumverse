@@ -39,6 +39,8 @@ export default async function page({
 
   if (!question) notFound();
 
+  const isSaved = !!(question as any)?.saved;
+
   return (
     <div className="p-3">
       <div className="flex justify-between items-center">
@@ -53,7 +55,7 @@ export default async function page({
           <div>{question.answers} Answers</div>
           <div>{question.views} Shares</div>
           <div>
-            <ToggleBookMark />
+            <ToggleBookMark questionId={id} saved={isSaved} />
           </div>
         </div>
       </div>

@@ -4,12 +4,35 @@ import ToggleBookMarkAction from "@/lib/actions/ToggleBookMarkAction";
 import React, { useState } from "react";
 import { Bounce, toast } from "react-toastify";
 
-function ToggleBookMark() {
-  const [isSaved, setIsSaved] = useState(false);
+function ToggleBookMark({
+  questionId,
+  saved,
+}: {
+  questionId: string;
+  saved: boolean;
+}) {
+  const [isSaved, setIsSaved] = useState(saved);
 
   const handleSave = async () => {
     try {
-      await ToggleBookMarkAction();
+      const { success, data, message } = await ToggleBookMarkAction({
+        questionId,
+      });
+      if (success && data) {
+        setIsSaved(data.saved);
+      } else {
+        toast.error(message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message, {
