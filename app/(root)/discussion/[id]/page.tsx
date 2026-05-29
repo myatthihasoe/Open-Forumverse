@@ -2,6 +2,7 @@ import AnswerForm from "@/components/AnswerForm";
 import AnswerList from "@/components/AnswerList";
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
+import ToggleBookMark from "@/components/ToggleBookMark";
 import VoteButtons from "@/components/VoteButton";
 import GetAnswers from "@/lib/actions/GetAnswers";
 import { GetQuestion } from "@/lib/actions/GetQuestion.action";
@@ -51,6 +52,9 @@ export default async function page({
           />
           <div>{question.answers} Answers</div>
           <div>{question.views} Shares</div>
+          <div>
+            <ToggleBookMark />
+          </div>
         </div>
       </div>
       <div className="my-3">
