@@ -1,6 +1,8 @@
 import { auth } from "@/auth";
+import CommonFilter from "@/components/CommonFilter";
 import DataRenderer from "@/components/DataRenderer";
 import TagInfoCard from "@/components/TagInfoCard";
+import { TagFilters, DefaultFilters } from "@/constant/filters";
 import { getTags } from "@/lib/actions/GetTags.action";
 
 async function page({
@@ -24,9 +26,13 @@ async function page({
 
   return (
     <>
-      <div className="flex items-center justify-between p-5">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">All Tags</h1>
         <div>
-          <h1 className="text-3xl font-bold">All Tags</h1>
+          <CommonFilter
+            filters={TagFilters}
+            defaultFilter={DefaultFilters.TagFilters}
+          />
         </div>
       </div>
       <DataRenderer

@@ -6,17 +6,17 @@ export const HomePageFilters = [
 ];
 
 export const AnswerFilters = [
-  { name: "Newest", value: "latest" },
+  { name: "Latest", value: "latest" },
   { name: "Oldest", value: "oldest" },
   { name: "Popular", value: "popular" },
 ];
 
 export const CollectionFilters = [
   { name: "Oldest", value: "oldest" },
-  { name: "Most Voted", value: "mostvoted" },
-  { name: "Most Viewed", value: "mostviewed" },
-  { name: "Most Recent", value: "mostrecent" },
-  { name: "Most Answered", value: "mostanswered" },
+  { name: "Most Voted", value: "most_voted" },
+  { name: "Most Viewed", value: "most_viewed" },
+  { name: "Most Recent", value: "most_recent" },
+  { name: "Most Answered", value: "most_answered" },
 ];
 
 export const TagFilters = [
@@ -35,7 +35,7 @@ export const UserFilters = [
 // Default filter values for each filter set
 export const DefaultFilters = {
   HomePageFilters: "newest",
-  CollectionFilters: "mostrecent",
+  CollectionFilters: "most_recent",
   TagFilters: "name",
   UserFilters: "newest",
   AnswerFilters: "latest",

@@ -12,10 +12,13 @@ import { after } from "next/server";
 
 export default async function page({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string }>;
 }) {
   const { id } = await params;
+  const { page = 1, pageSize = 10, filter = "" } = await searchParams;
   const { data: question, success } = await GetQuestion({
     questionId: id,
   });
@@ -30,9 +33,9 @@ export default async function page({
     message: errorAnswer,
   } = await GetAnswers({
     questionId: id,
-    page: 1,
-    pageSize: 10,
-    filter: "",
+    page: Number(page),
+    pageSize: Number(pageSize),
+    filter: filter,
   });
 
   const { answers = [], totalAnswers = 0 } = answersData || {};

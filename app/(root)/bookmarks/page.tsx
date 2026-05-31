@@ -1,6 +1,8 @@
+import CommonFilter from "@/components/CommonFilter";
 import DataRenderer from "@/components/DataRenderer";
 import Filters from "@/components/Filters";
 import ThreadCard from "@/components/ThreadCard";
+import { CollectionFilters, DefaultFilters } from "@/constant/filters";
 import getBookMarkCollections from "@/lib/actions/GetBookMarkCollections";
 
 async function page({
@@ -24,8 +26,14 @@ async function page({
   return (
     <>
       <div className="flex items-center justify-between p-5">
-        <div>
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Saved Threads</h1>
+          <div>
+            <CommonFilter
+              filters={CollectionFilters}
+              defaultFilter={DefaultFilters.CollectionFilters}
+            />
+          </div>
         </div>
       </div>
       <Filters />
