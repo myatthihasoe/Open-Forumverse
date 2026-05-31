@@ -18,7 +18,7 @@ export default async function page({
   searchParams: Promise<{ [key: string]: string }>;
 }) {
   const { id } = await params;
-  const { page = 1, pageSize = 10, filter = "" } = await searchParams;
+  const { page, pageSize, filter } = await searchParams;
   const { data: question, success } = await GetQuestion({
     questionId: id,
   });
@@ -33,9 +33,9 @@ export default async function page({
     message: errorAnswer,
   } = await GetAnswers({
     questionId: id,
-    page: Number(page),
-    pageSize: Number(pageSize),
-    filter: filter,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter: filter || "",
   });
 
   const { answers = [], totalAnswers = 0 } = answersData || {};

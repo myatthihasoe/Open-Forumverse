@@ -21,7 +21,7 @@ export default async function page({
   const { success, data, message, details } = await GetDiscussion({
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
-    filter: filter || "",
+    filter: filter || DefaultFilters.HomePageFilters,
     search: search || "",
   });
 
