@@ -1,6 +1,6 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
-import { TagType } from "./tag.model";
-import { UserType } from "./user.model";
+import type { TagType } from "./tag.model";
+import type { UserType } from "./user.model";
 
 export interface QuestionType {
   _id?: string | Types.ObjectId;
@@ -16,20 +16,27 @@ export interface QuestionType {
   updatedAt?: Date;
 }
 
+export type QuestionTagType = Pick<TagType, "_id" | "name">;
+export type QuestionAuthorType = Pick<UserType, "_id" | "name" | "image">;
+
 export interface QuestionWithTagsType extends Omit<QuestionType, "tags"> {
-  tags: (TagType & { _id?: string | Types.ObjectId })[];
+  tags: QuestionTagType[];
+}
+
+export interface QuestionWithTagsAndSavedType extends QuestionWithTagsType {
+  saved: boolean;
 }
 
 export interface QuestionWithAuthorType extends Omit<QuestionType, "author"> {
-  author: UserType & { _id?: string | Types.ObjectId };
+  author: QuestionAuthorType;
 }
 
 export interface QuestionFullType extends Omit<
   QuestionType,
   "tags" | "author"
 > {
-  tags: (TagType & { _id?: string | Types.ObjectId })[];
-  author: UserType & { _id?: string | Types.ObjectId };
+  tags: QuestionTagType[];
+  author: QuestionAuthorType;
 }
 
 // export interface QuestionDocument extends QuestionType, Document {}
