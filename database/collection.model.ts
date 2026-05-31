@@ -1,8 +1,14 @@
 import { Document, Model, model, models, Schema, Types } from "mongoose";
+import type { QuestionFullType } from "./question.model";
 
 export interface CollectionType {
   author: Types.ObjectId;
   question: Types.ObjectId;
+}
+
+export interface CollectionWithQuestionType
+  extends Omit<CollectionType, "question"> {
+  question: QuestionFullType;
 }
 
 export interface CollectionDocument extends CollectionType, Document {}

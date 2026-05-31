@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { FaHome, FaUsers } from "react-icons/fa";
-import { RiLoginCircleLine, RiLogoutCircleLine } from "react-icons/ri";
+import {
+  RiBookMarkedLine,
+  RiLoginCircleLine,
+  RiLogoutCircleLine,
+} from "react-icons/ri";
 import { GiNewspaper } from "react-icons/gi";
 import { FaUserTag } from "react-icons/fa";
 import { MdOutlinePostAdd, MdQuestionAnswer } from "react-icons/md";
 import ROUTES from "@/routes";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
+import { FaBookBookmark } from "react-icons/fa6";
 export default async function LeftSidebar() {
   const session = await auth();
   const user = session?.user;
@@ -60,11 +65,11 @@ export default async function LeftSidebar() {
         </li>
         <li className="bg-primary rounded-xl px-3 py-3 ">
           <Link
-            href={ROUTES.POSTS}
+            href={ROUTES.BOOKMARKS}
             className="flex items-center text-[16px] font-bold space-x-4"
           >
-            <MdOutlinePostAdd />
-            <span>Posts</span>
+            <RiBookMarkedLine />
+            <span>BookMarks</span>
           </Link>
         </li>
         {!user && (

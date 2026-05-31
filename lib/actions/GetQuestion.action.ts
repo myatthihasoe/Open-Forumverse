@@ -1,6 +1,8 @@
 "use server";
 
-import Question, { QuestionWithTagsType } from "@/database/question.model";
+import Question, {
+  QuestionWithTagsAndSavedType,
+} from "@/database/question.model";
 import dbConnect from "../dbConnect";
 import validateData from "../validateData";
 import { actionError } from "../response";
@@ -11,7 +13,7 @@ import { auth } from "@/auth";
 
 export async function GetQuestion(params: { questionId: string }): Promise<{
   success: boolean;
-  data?: QuestionWithTagsType;
+  data?: QuestionWithTagsAndSavedType;
 }> {
   await dbConnect();
   const validatedData = validateData(params, GetQuestionSchema);

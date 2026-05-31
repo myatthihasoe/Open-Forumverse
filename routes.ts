@@ -9,6 +9,7 @@ const ROUTES = {
   DISCUSSION_CREATE: "/discussion/create",
   DISCUSSION_DETAIL: (id: string) => "/discussion/" + id,
   COMMUNITY: "/community",
+  BOOKMARKS: "/bookmarks",
   REGISTER: "/register",
   LOGIN: "/login",
   LOGOUT: "/logout",

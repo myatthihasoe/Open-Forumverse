@@ -39,7 +39,7 @@ export default async function page({
 
   if (!question) notFound();
 
-  const isSaved = !!(question as any)?.saved;
+  // const isSaved = !!(question as any)?.saved;
 
   return (
     <div className="p-3">
@@ -55,7 +55,7 @@ export default async function page({
           <div>{question.answers} Answers</div>
           <div>{question.views} Shares</div>
           <div>
-            <ToggleBookMark questionId={id} saved={isSaved} />
+            <ToggleBookMark questionId={id} saved={question.saved} />
           </div>
         </div>
       </div>

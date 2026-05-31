@@ -17,11 +17,12 @@ function ToggleBookMark({
     try {
       const { success, data, message } = await ToggleBookMarkAction({
         questionId,
+        
       });
       if (success && data) {
         setIsSaved(data.saved);
       } else {
-        toast.error(message, {
+        toast.warn(message, {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
