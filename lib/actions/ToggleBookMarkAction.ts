@@ -20,14 +20,19 @@ const ToggleBookMarkAction = async (params: {
   message?: string;
   details?: object | null;
 }> => {
-  await dbConnect();
-  const validatedData = validateData(params, BookMarkSchema);
-  const { questionId } = validatedData.data;
   try {
-    const question = Question.findById(questionId);
+    await dbConnect();
+    const validatedData = validateData(params, BookMarkSchema);
+    const { questionId } = validatedData.data;
+    
+    const question = await Question.findById(questionId);
     if (!question) throw new Error("question not found");
     const auth_session = await auth();
     const userId = auth_session?.user?.id;
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
 
     const collection = await Collection.findOne({
       question: questionId,

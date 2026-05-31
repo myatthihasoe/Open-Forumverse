@@ -28,15 +28,11 @@ const GetAnswers = async (params: {
 
   let sortCriteria = {};
   switch (filter) {
-    case "newest":
+    case "latest":
       sortCriteria = { createdAt: -1 };
       break;
     case "oldest":
       sortCriteria = { createdAt: 1 };
-      break;
-    case "unanswered":
-      sortCriteria = { answers: 0 };
-      //   sortCriteria = { createdAt: -1 };
       break;
     case "popular":
       sortCriteria = { upvotes: -1 };

@@ -25,61 +25,67 @@ const GetBookMarkCollections = async (params: {
   message?: string;
   details?: object | null;
 }> => {
-  await dbConnect();
-  const auth_session = await auth();
-  const userId = auth_session?.user?.id;
-
-  const validatedData = validateData(params, PaginatedSearchParamsSchema);
-  const { page = 1, pageSize = 10, search, filter, sort } = validatedData.data;
-
-  const skip = Number(page - 1) * pageSize;
-  const limit = Number(pageSize);
-
-  const filterQuery: QueryFilter<typeof Collection> = { author: userId };
-
-  if (search) {
-    const matchingQuestions = await Question.find({
-      $or: [
-        { title: { $regex: search, $options: "i" } },
-        { content: { $regex: search, $options: "i" } },
-      ],
-    }).select("_id"); // [{ _id: "123" }, { _id: "456" }]
-    // console.log("Matching Q:", matchingQuestions)
-
-    const matchingQuestionIds = matchingQuestions.map((q) => q._id); // ["123", "456"]
-    if (!matchingQuestionIds.length) {
-      return {
-        success: true,
-        data: {
-          collections: [],
-          isNext: false,
-        },
-      };
-    }
-    filterQuery.question = { $in: matchingQuestionIds };
-  }
-
-  let sortCriteria = {};
-
-  switch (filter) {
-    case "most_recent":
-      sortCriteria = { createdAt: -1 };
-      break;
-    case "oldest":
-      sortCriteria = { createdAt: 1 };
-      break;
-    case "popular":
-      sortCriteria = { upvotes: -1 };
-      break;
-    case "most_answered":
-      sortCriteria = { answers: -1 };
-      break;
-    default:
-      sortCriteria = { createdAt: -1 };
-      break;
-  }
-
   try {
+    await dbConnect();
+    const auth_session = await auth();
+    const userId = auth_session?.user?.id;
+
+    const validatedData = validateData(params, PaginatedSearchParamsSchema);
+    const {
+      page = 1,
+      pageSize = 10,
+      search,
+      filter,
+      sort,
+    } = validatedData.data;
+
+    const skip = Number(page - 1) * pageSize;
+    const limit = Number(pageSize);
+
+    const filterQuery: QueryFilter<typeof Collection> = { author: userId };
+
+    if (search) {
+      const matchingQuestions = await Question.find({
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { content: { $regex: search, $options: "i" } },
+        ],
+      }).select("_id"); // [{ _id: "123" }, { _id: "456" }]
+      // console.log("Matching Q:", matchingQuestions)
+
+      const matchingQuestionIds = matchingQuestions.map((q) => q._id); // ["123", "456"]
+      if (!matchingQuestionIds.length) {
+        return {
+          success: true,
+          data: {
+            collections: [],
+            isNext: false,
+          },
+        };
+      }
+      filterQuery.question = { $in: matchingQuestionIds };
+    }
+
+    let sortCriteria = {};
+
+    switch (filter) {
+      case "most_recent":
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "oldest":
+        sortCriteria = { createdAt: 1 };
+        break;
+      case "most_voted":
+        sortCriteria = { upvotes: -1 };
+        break;
+      case "most_answered":
+        sortCriteria = { answers: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
+
     const totalCollections = await Collection.countDocuments(filterQuery);
     const collections = await Collection.find(filterQuery)
       .populate({
