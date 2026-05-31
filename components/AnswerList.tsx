@@ -1,6 +1,8 @@
 import { AnswerResponseType } from "@/database/answer.model";
 import AnswerCard from "./AnswerCard";
 import DataRenderer from "./DataRenderer";
+import CommonFilter from "./CommonFilter";
+import { AnswerFilters, DefaultFilters } from "@/constant/filters";
 
 function AnswerList({
   answers,
@@ -15,7 +17,10 @@ function AnswerList({
 }) {
   return (
     <div className="mt-8">
-      <h3 className="font-bold text-xl">Answer List - {totalAnswers}</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="font-bold text-xl">Answer List - {totalAnswers}</h3>
+        <CommonFilter filters={AnswerFilters} defaultFilter={DefaultFilters.AnswerFilters} />
+      </div>
       <DataRenderer
         success={success}
         errorMessage={errorMessage}
