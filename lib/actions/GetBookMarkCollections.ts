@@ -47,7 +47,7 @@ const GetBookMarkCollections = async (params: {
     // console.log("Matching Q:", matchingQuestions)
 
     const matchingQuestionIds = matchingQuestions.map((q) => q._id); // ["123", "456"]
-    if (matchingQuestionIds.length) {
+    if (!matchingQuestionIds.length) {
       return {
         success: true,
         data: {
