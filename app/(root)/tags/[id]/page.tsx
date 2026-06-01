@@ -1,13 +1,7 @@
-// 'use client'
-import { auth } from "@/auth";
-import ButtonLink from "@/components/ButtonLink";
 import DataRenderer from "@/components/DataRenderer";
-import Filters from "@/components/Filters";
+import Pagination from "@/components/Pagination";
 import ThreadCard from "@/components/ThreadCard";
-import { GetDiscussion } from "@/lib/actions/GetDiscussion.action";
 import getTagQuestions from "@/lib/actions/GetTagQuestions";
-import { api } from "@/lib/api";
-import ROUTES from "@/routes";
 
 export default async function page({
   params,
@@ -19,7 +13,7 @@ export default async function page({
   const { id } = await params;
   const { page, pageSize, search } = await searchParams;
 
-  const { success, data, message, details } = await getTagQuestions({
+  const { success, data, message } = await getTagQuestions({
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
     tagId: id,
@@ -27,9 +21,7 @@ export default async function page({
     search: search || "",
   });
 
-  const { questions = [], tag } = data || {};
-  // console.log("Questions:", questions)
-  console.log("Tag:", tag);
+  const { questions = [], tag, isNext = false } = data || {};
 
   return (
     <>
@@ -51,6 +43,7 @@ export default async function page({
           ))
         }
       />
+      <Pagination isNext={isNext} page={page || 1} />
     </>
   );
 }
