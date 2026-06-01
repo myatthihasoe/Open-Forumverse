@@ -1,116 +1,147 @@
 "use server";
 
+import mongoose, { PipelineStage } from "mongoose";
+import { CollectionWithQuestionType } from "@/database/collection.model";
 import Collection from "@/database/collection.model";
-import type { CollectionWithQuestionType } from "@/database/collection.model";
 import dbConnect from "../dbConnect";
 import { auth } from "@/auth";
 import validateData from "../validateData";
 import PaginatedSearchParamsSchema from "../schemas/PaginatedSearchParamsSchema";
-import Question from "@/database/question.model";
-import { QueryFilter } from "mongoose";
 import { actionError } from "../response";
 
-const GetBookMarkCollections = async (params: {
+const getBookMarkCollections = async (params: {
   page?: number;
   pageSize?: number;
   search?: string;
   filter?: string;
   sort?: string;
 }): Promise<{
-  success: boolean;
   data?: {
     collections: CollectionWithQuestionType[];
     isNext: boolean;
   };
+  success: boolean;
   message?: string;
   details?: object | null;
 }> => {
+  await dbConnect();
+  const auth_session = await auth();
+  const userId = auth_session?.user?.id;
+
+  if (!userId) {
+    return {
+      success: true,
+      data: { collections: [], isNext: false },
+    };
+  }
+
+  const validatedData = validateData(params, PaginatedSearchParamsSchema);
+
+  const { page = 1, pageSize = 10, search, filter } = validatedData.data;
+
+  const skip = (Number(page) - 1) * pageSize;
+  const limit = Number(pageSize);
+
+  // Define sort options for all filters
+  const sortOptions: Record<string, Record<string, 1 | -1>> = {
+    most_recent: { "question.createdAt": -1 },
+    oldest: { "question.createdAt": 1 },
+    most_voted: { "question.upvotes": -1 },
+    most_viewed: { "question.views": -1 },
+    most_answered: { "question.answers": -1 },
+  };
+
+  const sortCriteria = sortOptions[filter] || sortOptions.most_recent;
+  /* collection -> {
+    _id : "asdfsafsdf",
+    question : { 
+    _id : "adfasdf", 
+    title: "adfasdfs", 
+    content: "adfasdfs", 
+    author:{_id:"asdfsaf"},
+    tags:[]
+    ]
+   } */
   try {
-    await dbConnect();
-    const auth_session = await auth();
-    const userId = auth_session?.user?.id;
+    // Build aggregation pipeline - collection
+    const pipeline: PipelineStage[] = [
+      // Match collections for the current user
+      {
+        $match: { author: new mongoose.Types.ObjectId(userId) },
+      },
+      // Lookup questions -> join -> collection -> question
+      {
+        $lookup: {
+          from: "questions",
+          localField: "question",
+          foreignField: "_id",
+          as: "question",
+        },
+      },
+      // Unwind question
+      { $unwind: "$question" },
+      // Lookup author
+      {
+        $lookup: {
+          from: "users",
+          localField: "question.author",
+          foreignField: "_id",
+          as: "question.author",
+        },
+      },
+      // Unwind author
+      { $unwind: "$question.author" },
+      // Lookup tags
+      {
+        $lookup: {
+          from: "tags",
+          localField: "question.tags",
+          foreignField: "_id",
+          as: "question.tags",
+        },
+      },
+    ];
 
-    const validatedData = validateData(params, PaginatedSearchParamsSchema);
-    const {
-      page = 1,
-      pageSize = 10,
-      search,
-      filter,
-      sort,
-    } = validatedData.data;
-
-    const skip = Number(page - 1) * pageSize;
-    const limit = Number(pageSize);
-
-    const filterQuery: QueryFilter<typeof Collection> = { author: userId };
-
+    // Apply search filter if provided
     if (search) {
-      const matchingQuestions = await Question.find({
-        $or: [
-          { title: { $regex: search, $options: "i" } },
-          { content: { $regex: search, $options: "i" } },
-        ],
-      }).select("_id"); // [{ _id: "123" }, { _id: "456" }]
-      // console.log("Matching Q:", matchingQuestions)
-
-      const matchingQuestionIds = matchingQuestions.map((q) => q._id); // ["123", "456"]
-      if (!matchingQuestionIds.length) {
-        return {
-          success: true,
-          data: {
-            collections: [],
-            isNext: false,
-          },
-        };
-      }
-      filterQuery.question = { $in: matchingQuestionIds };
+      pipeline.push({
+        $match: {
+          $or: [
+            { "question.title": { $regex: search, $options: "i" } },
+            { "question.content": { $regex: search, $options: "i" } },
+          ],
+        },
+      });
     }
 
-    let sortCriteria = {};
+    // Get total count before pagination
+    const [totalCountResult] = await Collection.aggregate([
+      ...pipeline,
+      { $count: "count" },
+    ]); // [{count : 10}]
 
-    switch (filter) {
-      case "most_recent":
-        sortCriteria = { createdAt: -1 };
-        break;
-      case "oldest":
-        sortCriteria = { createdAt: 1 };
-        break;
-      case "most_voted":
-        sortCriteria = { upvotes: -1 };
-        break;
-      case "most_answered":
-        sortCriteria = { answers: -1 };
-        break;
-      default:
-        sortCriteria = { createdAt: -1 };
-        break;
-    }
+    const totalCollections = totalCountResult?.count || 0;
 
-    const totalCollections = await Collection.countDocuments(filterQuery);
-    const collections = await Collection.find(filterQuery)
-      .populate({
-        path: "question",
-        populate: [
-          { path: "tags", select: "_id name" },
-          { path: "author", select: "_id name" },
-        ],
-      })
-      .sort(sortCriteria)
-      .skip(skip)
-      .limit(limit);
+    // Add sorting and pagination &  Execute aggregation
+    const collections = await Collection.aggregate([
+      ...pipeline,
+      { $sort: sortCriteria },
+      { $skip: skip },
+      { $limit: limit },
+    ]); // []
 
     const isNext = totalCollections > skip + collections.length;
+
     return {
       success: true,
       data: {
         collections: JSON.parse(JSON.stringify(collections)),
         isNext,
       },
-      message: "Collections retrieved successfully",
     };
   } catch (e) {
     return actionError(e);
   }
 };
 
-export default GetBookMarkCollections;
+export default getBookMarkCollections;
