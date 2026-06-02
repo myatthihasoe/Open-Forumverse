@@ -4,6 +4,7 @@ import GetUsers from "@/lib/actions/GetUsers";
 import UserCard from "./components/UserCard";
 import CommonFilter from "@/components/CommonFilter";
 import { UserFilters, DefaultFilters } from "@/constant/filters";
+import Pagination from "@/components/Pagination";
 
 async function page({
   searchParams,
@@ -22,7 +23,7 @@ async function page({
     filter: filter || "",
   });
 
-  const { users = [] } = data || {};
+  const { users = [], isNext = false } = data || {};
 
   return (
     <>
@@ -62,6 +63,7 @@ async function page({
           );
         }}
       />
+      <Pagination isNext={isNext} page={page || 1} />
     </>
   );
 }

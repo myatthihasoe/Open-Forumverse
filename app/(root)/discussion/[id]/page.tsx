@@ -1,5 +1,6 @@
 import AnswerForm from "@/components/AnswerForm";
 import AnswerList from "@/components/AnswerList";
+import Pagination from "@/components/Pagination";
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
 import ToggleBookMark from "@/components/ToggleBookMark";
@@ -19,7 +20,7 @@ export default async function page({
 }) {
   const { id } = await params;
   const { page, pageSize, filter } = await searchParams;
-  const { data: question, success } = await GetQuestion({
+  const { data: question } = await GetQuestion({
     questionId: id,
   });
 
@@ -38,7 +39,7 @@ export default async function page({
     filter: filter || "",
   });
 
-  const { answers = [], totalAnswers = 0 } = answersData || {};
+  const { answers = [], totalAnswers = 0, isNext = false } = answersData || {};
 
   if (!question) notFound();
 
@@ -79,6 +80,7 @@ export default async function page({
           success={answersSuccess}
           errorMessage={errorAnswer}
         />
+        <Pagination isNext={isNext} page={page || 1} />
       </div>
       <div className="my-3">
         <AnswerForm
