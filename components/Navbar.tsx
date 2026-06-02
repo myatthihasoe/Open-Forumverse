@@ -3,6 +3,8 @@ import logo from "@/public/images/logo.svg";
 import profile from "@/public/images/profile.jpg";
 import SearchInput from "./SearchInput";
 import { auth } from "@/auth";
+import Link from "next/link";
+import ROUTES from "@/routes";
 
 export default async function Navbar() {
   const session = await auth();
@@ -26,13 +28,15 @@ export default async function Navbar() {
       </div>
       <div>
         {user && (
-          <Image
-            src={user?.image || profile}
-            alt="profile"
-            className="rounded-full object-cover aspect-square"
-            width={45}
-            height={45}
-          />
+          <Link href={ROUTES.PROFILE(user.id as string)}>
+            <Image
+              src={user?.image || profile}
+              alt="profile"
+              className="rounded-full object-cover aspect-square"
+              width={45}
+              height={45}
+            />
+          </Link>
         )}
       </div>
     </nav>

@@ -1,7 +1,6 @@
 const ROUTES = {
   HOME: "/",
   POPULAR: "/popular",
-  PROFILE: "/profile",
   TAGS: "/tags",
   POSTS: "/posts",
   NEWS: "/news",
@@ -13,6 +12,7 @@ const ROUTES = {
   REGISTER: "/register",
   LOGIN: "/login",
   LOGOUT: "/logout",
+  PROFILE: (id: string) => "/profile/" + id,
 };
 
 export default ROUTES;
