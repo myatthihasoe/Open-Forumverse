@@ -9,7 +9,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!result.success || !result.data) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-10 text-zinc-700 dark:text-zinc-300">
-        Failed to load user.
+        {result.message || "Failed to load user profile. Please try again later."}
       </div>
     );
   }
