@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import profile from "@/public/images/profile.jpg";
+import ROUTES from "@/routes";
 
 function UserCard({
   id,
@@ -14,7 +15,7 @@ function UserCard({
   return (
     <div>
       <Link
-        href={`/users/${id}`}
+        href={ROUTES.PROFILE(id)}
         className="flex flex-col items-center justify-center bg-tertiary p-2 rounded-xl"
       >
         {image ? (
