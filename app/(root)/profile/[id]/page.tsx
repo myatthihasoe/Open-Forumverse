@@ -3,7 +3,7 @@ import GetUser from "@/lib/actions/GetUserForProfile";
 import ProfileHeader from "../components/ProfileHeader";
 
 const Page = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+  const { id } = await params;
   const result = await GetUser({ userId: id });
 
   if (!result.success || !result.data) {

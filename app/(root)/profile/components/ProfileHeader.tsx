@@ -1,7 +1,4 @@
-import React from "react";
 import type { UserType } from "@/database/user.model";
-import ButtonLink from "@/components/ButtonLink";
-import ROUTES from "@/routes";
 import Button from "@/components/Button";
 import Image from "next/image";
 
@@ -35,6 +32,8 @@ const ProfileHeader = ({
               src={image}
               alt={name || username}
               className="h-full w-full object-cover"
+              width={96}
+              height={96}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xl font-semibold text-zinc-600 dark:text-zinc-300">
