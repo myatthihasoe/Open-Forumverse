@@ -10,14 +10,16 @@ function Pagination({
   isNext: boolean;
   page: number | string;
 }) {
-  page = Number(page);
+  const parsedPage = Number(page);
+  const currentPage =
+    Number.isFinite(parsedPage) && parsedPage > 0 ? Math.floor(parsedPage) : 1;
   const router = useRouter();
 
   const handleClick = (type: "prev" | "next") => {
     const currentQuery = queryString.parse(window.location.search);
     const updatedQuery = {
       ...currentQuery,
-      page: type === "prev" ? page - 1 : page + 1,
+      page: type === "prev" ? currentPage - 1 : currentPage + 1,
     };
 
     const url = queryString.stringifyUrl(
@@ -33,17 +35,19 @@ function Pagination({
   return (
     <div className="flex items-center justify-center gap-4 p-5">
       <button
-        disabled={page <= 1}
+        disabled={currentPage <= 1}
         onClick={() => handleClick("prev")}
         className={`rounded-xl px-4 py-2 text-gray-300 ${
-          page <= 1
+          currentPage <= 1
             ? "cursor-not-allowed bg-tertiary opacity-50"
             : "bg-tertiary hover:bg-main"
         }`}
       >
         previous
       </button>
-      <div className="rounded-xl bg-main px-4 py-2 text-gray-300"> {page}</div>
+      <div className="rounded-xl bg-main px-4 py-2 text-gray-300">
+        {currentPage}
+      </div>
       <button
         disabled={!isNext}
         onClick={() => handleClick("next")}

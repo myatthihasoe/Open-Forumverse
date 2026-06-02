@@ -104,11 +104,12 @@ const getBookMarkCollections = async (params: {
 
     // Apply search filter if provided
     if (search) {
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       pipeline.push({
         $match: {
           $or: [
-            { "question.title": { $regex: search, $options: "i" } },
-            { "question.content": { $regex: search, $options: "i" } },
+            { "question.title": { $regex: escapedSearch, $options: "i" } },
+            { "question.content": { $regex: escapedSearch, $options: "i" } },
           ],
         },
       });

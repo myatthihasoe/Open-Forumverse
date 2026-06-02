@@ -11,15 +11,31 @@ import ROUTES from "@/routes";
 export default async function page({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string }>;
+searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { page, pageSize, filter, search } = await searchParams;
 
+  const first = (value: string | string[] | undefined) =>
+    Array.isArray(value) ? value[0] : value;
+
+  const toPositiveInt = (
+    value: string | string[] | undefined,
+    fallback: number
+  ) => {
+    const parsed = Number(first(value));
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+  };
+
+  const currentPage = toPositiveInt(page, 1);
+  const currentPageSize = toPositiveInt(pageSize, 10);
+  const currentFilter = first(filter) || DefaultFilters.HomePageFilters;
+  const currentSearch = first(search) || "";
+
   const { success, data, message } = await GetDiscussion({
-    page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
-    filter: filter || DefaultFilters.HomePageFilters,
-    search: search || "",
+    page: currentPage,
+    pageSize: currentPageSize,
+    filter: currentFilter,
+    search: currentSearch,
   });
 
   const { questions = [], isNext = false } = data || {};
@@ -53,7 +69,7 @@ export default async function page({
           ))
         }
       />
-      <Pagination isNext={isNext} page={page || 1} />
+      <Pagination isNext={isNext} page={currentPage} />
     </>
   );
 }
