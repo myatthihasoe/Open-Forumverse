@@ -2,8 +2,9 @@ import dbConnect from "../dbConnect";
 import validateData from "../validateData";
 import GetUserAnswersSchema from "../schemas/GetUserAnswersSchema";
 import { actionError } from "../response";
-import Answer, { AnswerDocument } from "@/database/answer.model";
-
+import Answer, {
+  AnswerResponseType,
+} from "@/database/answer.model";
 
 const GetUserAnswers = async (params: {
   userId: string;
@@ -12,7 +13,7 @@ const GetUserAnswers = async (params: {
 }): Promise<{
   success: boolean;
   data?: {
-    answers: AnswerDocument[];
+    answers: AnswerResponseType[];
     isNext: boolean;
   };
   message?: string;
