@@ -9,17 +9,19 @@ import ThreadCard from "@/components/ThreadCard";
 import Link from "next/link";
 import { AnswerResponseType } from "@/database/answer.model";
 import { QuestionFullType } from "@/database/question.model";
+import Pagination from "@/components/Pagination";
 
 const Page = async ({
   params,
   searchParams,
 }: {
   params: { id: string };
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; page?: string }>;
 }) => {
   const { id } = await params;
   const result = await GetUser({ userId: id });
-  const activeTab = (await searchParams)?.tab  || "questions";
+  const activeTab = (await searchParams)?.tab || "questions";
+  const page = parseInt((await searchParams)?.page || "1");
 
   if (!result.success || !result.data) {
     return (
@@ -34,24 +36,31 @@ const Page = async ({
   let errorMessage: string | undefined;
   let questions: QuestionFullType[] = [];
   let answers: AnswerResponseType[] = [];
+  let isNext = false;
 
   if (activeTab === "questions") {
     const { success, data, message } = await GetUserQuestions({
       userId: id,
+      page,
+      pageSize: 3,
     });
     questions = data?.questions ?? [];
     isSuccess = success;
     errorMessage = message;
+    isNext = data?.isNext ?? false;
   } else {
     const { success, data, message } = await GetUserAnswers({
       userId: id,
+      page,
+      pageSize: 10,
     });
     answers = data?.answers ?? [];
     isSuccess = success;
     errorMessage = message;
+    isNext = data?.isNext ?? false;
   }
   const { user, totalQuestions, totalAnswers } = result.data;
-  
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <ProfileHeader user={user} totals={{ totalQuestions, totalAnswers }} />
@@ -74,27 +83,33 @@ const Page = async ({
         </Link>
       </div>
       {activeTab === "questions" ? (
-        <DataRenderer<QuestionFullType>
-          success={isSuccess}
-          data={questions}
-          errorMessage={errorMessage}
-          render={(questions) =>
-            questions.map((question) => (
-              <ThreadCard key={String(question._id)} question={question} />
-            ))
-          }
-        />
+        <>
+          <DataRenderer<QuestionFullType>
+            success={isSuccess}
+            data={questions}
+            errorMessage={errorMessage}
+            render={(questions) =>
+              questions.map((question) => (
+                <ThreadCard key={String(question._id)} question={question} />
+              ))
+            }
+          />
+          <Pagination isNext={isNext} page={page || 1} />
+        </>
       ) : (
-        <DataRenderer<AnswerResponseType>
-          success={isSuccess}
-          data={answers}
-          errorMessage={errorMessage}
-          render={(answers) =>
-            answers.map((answer) => (
-              <AnswerCard key={answer._id.toString()} answer={answer} />
-            ))
-          }
-        />
+        <>
+          <DataRenderer<AnswerResponseType>
+            success={isSuccess}
+            data={answers}
+            errorMessage={errorMessage}
+            render={(answers) =>
+              answers.map((answer) => (
+                <AnswerCard key={answer._id.toString()} answer={answer} />
+              ))
+            }
+          />
+          <Pagination isNext={isNext} page={page || 1} />
+        </>
       )}
     </div>
   );
