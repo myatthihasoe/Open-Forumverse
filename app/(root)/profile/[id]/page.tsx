@@ -7,17 +7,21 @@ import AnswerCard from "@/components/AnswerCard";
 import DataRenderer from "@/components/DataRenderer";
 import ThreadCard from "@/components/ThreadCard";
 import Link from "next/link";
+import { AnswerResponseType } from "@/database/answer.model";
+import { QuestionFullType } from "@/database/question.model";
+import Pagination from "@/components/Pagination";
 
 const Page = async ({
   params,
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { tab: string };
+  searchParams: Promise<{ tab?: string; page?: string }>;
 }) => {
   const { id } = await params;
   const result = await GetUser({ userId: id });
-  const activeTab = searchParams.tab;
+  const activeTab = (await searchParams)?.tab || "questions";
+  const page = parseInt((await searchParams)?.page || "1");
 
   if (!result.success || !result.data) {
     return (
@@ -28,20 +32,34 @@ const Page = async ({
     );
   }
 
-  const { user, totalQuestions, totalAnswers } = result.data;
-  const { success, data, message } = await GetUserQuestions({
-    userId: id,
-  });
-  const { questions = [] } = data || {};
+  let isSuccess = false;
+  let errorMessage: string | undefined;
+  let questions: QuestionFullType[] = [];
+  let answers: AnswerResponseType[] = [];
+  let isNext = false;
 
-  const {
-    success: answerSuccess,
-    data: dataAnswer,
-    message: answerError,
-  } = await GetUserAnswers({
-    userId: id,
-  });
-  const { answers = [] } = dataAnswer || {};
+  if (activeTab === "questions") {
+    const { success, data, message } = await GetUserQuestions({
+      userId: id,
+      page,
+      pageSize: 3,
+    });
+    questions = data?.questions ?? [];
+    isSuccess = success;
+    errorMessage = message;
+    isNext = data?.isNext ?? false;
+  } else {
+    const { success, data, message } = await GetUserAnswers({
+      userId: id,
+      page,
+      pageSize: 10,
+    });
+    answers = data?.answers ?? [];
+    isSuccess = success;
+    errorMessage = message;
+    isNext = data?.isNext ?? false;
+  }
+  const { user, totalQuestions, totalAnswers } = result.data;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -65,27 +83,33 @@ const Page = async ({
         </Link>
       </div>
       {activeTab === "questions" ? (
-        <DataRenderer
-          success={success}
-          data={questions}
-          errorMessage={message}
-          render={(questions) =>
-            questions.map((question) => (
-              <ThreadCard key={String(question._id)} question={question} />
-            ))
-          }
-        />
+        <>
+          <DataRenderer<QuestionFullType>
+            success={isSuccess}
+            data={questions}
+            errorMessage={errorMessage}
+            render={(questions) =>
+              questions.map((question) => (
+                <ThreadCard key={String(question._id)} question={question} />
+              ))
+            }
+          />
+          <Pagination isNext={isNext} page={page || 1} />
+        </>
       ) : (
-        <DataRenderer
-          success={answerSuccess}
-          data={answers}
-          errorMessage={answerError}
-          render={(answers) =>
-            answers.map((answer) => (
-              <AnswerCard key={answer._id.toString()} answer={answer} />
-            ))
-          }
-        />
+        <>
+          <DataRenderer<AnswerResponseType>
+            success={isSuccess}
+            data={answers}
+            errorMessage={errorMessage}
+            render={(answers) =>
+              answers.map((answer) => (
+                <AnswerCard key={answer._id.toString()} answer={answer} />
+              ))
+            }
+          />
+          <Pagination isNext={isNext} page={page || 1} />
+        </>
       )}
     </div>
   );
