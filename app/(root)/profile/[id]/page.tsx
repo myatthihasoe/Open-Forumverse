@@ -7,17 +7,19 @@ import AnswerCard from "@/components/AnswerCard";
 import DataRenderer from "@/components/DataRenderer";
 import ThreadCard from "@/components/ThreadCard";
 import Link from "next/link";
+import { AnswerResponseType } from "@/database/answer.model";
+import { QuestionFullType } from "@/database/question.model";
 
 const Page = async ({
   params,
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { tab: string };
+  searchParams: Promise<{ tab?: string }>;
 }) => {
   const { id } = await params;
   const result = await GetUser({ userId: id });
-  const activeTab = searchParams.tab;
+  const activeTab = (await searchParams)?.tab  || "questions";
 
   if (!result.success || !result.data) {
     return (
@@ -28,21 +30,28 @@ const Page = async ({
     );
   }
 
+  let isSuccess = false;
+  let errorMessage: string | undefined;
+  let questions: QuestionFullType[] = [];
+  let answers: AnswerResponseType[] = [];
+
+  if (activeTab === "questions") {
+    const { success, data, message } = await GetUserQuestions({
+      userId: id,
+    });
+    questions = data?.questions ?? [];
+    isSuccess = success;
+    errorMessage = message;
+  } else {
+    const { success, data, message } = await GetUserAnswers({
+      userId: id,
+    });
+    answers = data?.answers ?? [];
+    isSuccess = success;
+    errorMessage = message;
+  }
   const { user, totalQuestions, totalAnswers } = result.data;
-  const { success, data, message } = await GetUserQuestions({
-    userId: id,
-  });
-  const { questions = [] } = data || {};
-
-  const {
-    success: answerSuccess,
-    data: dataAnswer,
-    message: answerError,
-  } = await GetUserAnswers({
-    userId: id,
-  });
-  const { answers = [] } = dataAnswer || {};
-
+  
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <ProfileHeader user={user} totals={{ totalQuestions, totalAnswers }} />
@@ -65,10 +74,10 @@ const Page = async ({
         </Link>
       </div>
       {activeTab === "questions" ? (
-        <DataRenderer
-          success={success}
+        <DataRenderer<QuestionFullType>
+          success={isSuccess}
           data={questions}
-          errorMessage={message}
+          errorMessage={errorMessage}
           render={(questions) =>
             questions.map((question) => (
               <ThreadCard key={String(question._id)} question={question} />
@@ -76,10 +85,10 @@ const Page = async ({
           }
         />
       ) : (
-        <DataRenderer
-          success={answerSuccess}
+        <DataRenderer<AnswerResponseType>
+          success={isSuccess}
           data={answers}
-          errorMessage={answerError}
+          errorMessage={errorMessage}
           render={(answers) =>
             answers.map((answer) => (
               <AnswerCard key={answer._id.toString()} answer={answer} />
