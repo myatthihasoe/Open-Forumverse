@@ -6,8 +6,15 @@ import Link from "next/link";
 import ROUTES from "@/routes";
 import AuthenticationForm from "../components/AuthenticationForm";
 import { signInWithCredentials } from "@/lib/actions/SignInWithCredentials";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+
+  if (session) {
+    redirect(ROUTES.HOME);
+  }
   return (
     <div className="flex ">
       <div className="md:w-2/4 p-10 bg-primary h-screen flex items-center">
@@ -29,7 +36,9 @@ export default function page() {
             Tenetur consequuntur repudiandae ipsum incidunt temporibus quae
             quos, veritatis animi laborum?
           </p>
-          <Button variant="outline">Create New Account?</Button>
+          <Link href={ROUTES.REGISTER} className="block">
+            <Button variant="outline">Create a new account ?</Button>
+          </Link>
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">

@@ -4,8 +4,15 @@ import ROUTES from "@/routes";
 import Link from "next/link";
 import AuthenticationForm from "../components/AuthenticationForm";
 import { signUpWithCredentials } from "@/lib/actions/SignUpWithCredentials.action";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+  if (session) {
+    redirect(ROUTES.HOME);
+  }
+
   return (
     <div className="flex ">
       <div className="md:w-2/4 p-10 bg-primary h-screen flex items-center">
@@ -27,11 +34,16 @@ export default function page() {
             Tenetur consequuntur repudiandae ipsum incidunt temporibus quae
             quos, veritatis animi laborum?
           </p>
-          <Button variant="outline">Login Account?</Button>
+          <Link href={ROUTES.LOGIN} className="block">
+            <Button variant="outline">Login account ?</Button>
+          </Link>
         </div>
       </div>
       <div className="md:w-2/4 h-screen flex items-center justify-center">
-        <AuthenticationForm type="register" submitAction={signUpWithCredentials} />
+        <AuthenticationForm
+          type="register"
+          submitAction={signUpWithCredentials}
+        />
       </div>
     </div>
   );
