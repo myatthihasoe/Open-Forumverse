@@ -7,18 +7,24 @@ import { QuestionFullType } from "@/database/question.model";
 import ROUTES from "@/routes";
 import Link from "next/link";
 import { formatRelativeTime } from "@/lib/date";
+import Actions from "@/lib/actions/Actions";
 
 export default function ThreadCard({
   question,
+  showActions = false,
 }: {
   question: QuestionFullType;
+  showActions?: boolean;
 }) {
   const discussionId = question._id ? String(question._id) : null;
   return (
     <div className="bg-card rounded-xl px-10 py-5 space-y-7 my-3">
       <div>
-         {discussionId ? (
-          <Link href={ROUTES.DISCUSSION_DETAIL(discussionId)} className="hover:text-main">
+        {discussionId ? (
+          <Link
+            href={ROUTES.DISCUSSION_DETAIL(discussionId)}
+            className="hover:text-main"
+          >
             <h1 className="text-xl font-bold">{question.title}</h1>
           </Link>
         ) : (
@@ -44,7 +50,12 @@ export default function ThreadCard({
               // unoptimized
             />
           )}
-          <span>{question.author?.name}  <i className="text-gray-500 ml-2">{formatRelativeTime(question.createdAt!)}</i></span>
+          <span>
+            {question.author?.name}{" "}
+            <i className="text-gray-500 ml-2">
+              {formatRelativeTime(question.createdAt!)}
+            </i>
+          </span>
         </div>
         <div className="flex space-x-3 items-center">
           <div className="flex items-center space-x-1 text-[14px] text-gray-300">
@@ -65,6 +76,11 @@ export default function ThreadCard({
             </span>
             <span>{question.views} Shares</span>
           </div>
+          <Actions
+            type="question"
+            typeId={question._id as string}
+            showActions={showActions}
+          />
         </div>
       </div>
     </div>

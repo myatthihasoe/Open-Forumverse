@@ -10,6 +10,7 @@ import Link from "next/link";
 import { AnswerResponseType } from "@/database/answer.model";
 import { QuestionFullType } from "@/database/question.model";
 import Pagination from "@/components/Pagination";
+import { auth } from "@/auth";
 
 const Page = async ({
   params,
@@ -60,6 +61,7 @@ const Page = async ({
     isNext = data?.isNext ?? false;
   }
   const { user, totalQuestions, totalAnswers } = result.data;
+  const session = await auth()
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -90,7 +92,7 @@ const Page = async ({
             errorMessage={errorMessage}
             render={(questions) =>
               questions.map((question) => (
-                <ThreadCard key={String(question._id)} question={question} />
+                <ThreadCard key={String(question._id)} question={question} showActions={session?.user?.id === question.author?._id} />
               ))
             }
           />
@@ -104,7 +106,11 @@ const Page = async ({
             errorMessage={errorMessage}
             render={(answers) =>
               answers.map((answer) => (
-                <AnswerCard key={answer._id.toString()} answer={answer} />
+                <AnswerCard
+                  key={answer._id.toString()}
+                  answer={answer}
+                  showActions={session?.user?.id === answer.author._id}
+                />
               ))
             }
           />
