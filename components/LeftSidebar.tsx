@@ -3,6 +3,8 @@ import ROUTES from "@/routes";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import SidebarNav from "./SidebarNav";
+import { RiLogoutCircleLine } from "react-icons/ri";
+
 export default async function LeftSidebar() {
   const session = await auth();
   const user = session?.user;
@@ -24,7 +26,7 @@ export default async function LeftSidebar() {
               type="submit"
               className="w-full rounded-xl bg-red-500 p-3 flex items-center space-x-4 text-[16px] font-bold"
             >
-              <FaHome />
+              <RiLogoutCircleLine />
               <span>Logout</span>
             </button>
           </form>
