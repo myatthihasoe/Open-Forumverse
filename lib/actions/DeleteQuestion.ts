@@ -1,4 +1,5 @@
 "use server";
+ 
 import { auth } from "@/auth";
 import dbConnect from "../dbConnect";
 import DeleteQuestionSchema from "../schemas/DeleteQuestionSchema";
@@ -14,11 +15,7 @@ import Vote from "@/database/vote.model";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/routes";
 
-const DeleteQuestion = async ({
-  params,
-}: {
-  params: { questionId: string };
-}) => {
+const DeleteQuestion = async ( params : { questionId: string } ) => {
   await dbConnect();
   const validatedData = validateData(params, DeleteQuestionSchema);
   const { questionId } = validatedData.data;
@@ -75,6 +72,7 @@ const DeleteQuestion = async ({
     }
 
     await Question.findByIdAndDelete(questionId).session(session);
+    await session.commitTransaction();
     revalidatePath(ROUTES.PROFILE(user?.id as string));
 
     return { success: true };
