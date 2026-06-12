@@ -33,22 +33,33 @@ function Actions({ type, typeId, showActions }: ActionsProps) {
   const deleteAction = async () => {
     // Empty logic for now - will be implemented later
     // console.log(`action for ${type} with id: ${typeId}`);
-    let successValue;
     try {
+      let result;
       if (type === "question") {
-        const { success } = await DeleteQuestion({
+        result = await DeleteQuestion({
           questionId: typeId,
         });
-        successValue = success;
       } else {
-        const { success } = await DeleteAnswer({
+        result = await DeleteAnswer({
           answerId: typeId,
         });
-        successValue = success;
       }
 
-      if (successValue) {
+      if (result.success) {
         toast.success("Delete successfully.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        // Server action returned an error object
+        toast.error("Failed to delete", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -61,6 +72,7 @@ function Actions({ type, typeId, showActions }: ActionsProps) {
         });
       }
     } catch (e) {
+      // Handle unexpected runtime errors
       if (e instanceof Error) {
         toast.error(e.message, {
           position: "bottom-right",
@@ -97,8 +109,8 @@ function Actions({ type, typeId, showActions }: ActionsProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action cannot be undone. This will permanently delete your{" "}
+              {type} and all associated data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
