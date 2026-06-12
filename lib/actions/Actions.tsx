@@ -15,6 +15,8 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { Bounce, toast } from "react-toastify";
+import DeleteQuestion from "./DeleteQuestion";
 
 interface ActionsProps {
   type: "question" | "answer";
@@ -29,7 +31,40 @@ function Actions({ type, typeId, showActions }: ActionsProps) {
 
   const deleteAction = async () => {
     // Empty logic for now - will be implemented later
-    console.log(`action for ${type} with id: ${typeId}`);
+    // console.log(`action for ${type} with id: ${typeId}`);
+    try {
+      const { success } = await DeleteQuestion({
+        questionId: typeId,
+      });
+
+      if (success) {
+        toast.success("Delete Question successfully.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    }
   };
 
   return (
