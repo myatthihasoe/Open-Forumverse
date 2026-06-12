@@ -1,6 +1,8 @@
 import type { UserType } from "@/database/user.model";
 import Button from "@/components/Button";
 import Image from "next/image";
+import GetUser from "@/lib/actions/GetUserForProfile";
+import { id } from "zod/v4/locales";
 
 function getInitials(name?: string) {
   if (!name) return "U";
@@ -10,16 +12,18 @@ function getInitials(name?: string) {
   return (first + last).toUpperCase() || "U";
 }
 
-const ProfileHeader = ({
-  user,
-  totals,
-}: {
-  user: UserType;
-  totals: {
-    totalQuestions: number;
-    totalAnswers: number;
-  };
-}) => {
+const ProfileHeader = async ({ userId }: { userId: string }) => {
+  const result = await GetUser({ userId });
+  if (!result.success || !result.data) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-10 text-zinc-700 dark:text-zinc-300">
+        {result.message ||
+          "Failed to load user profile. Please try again later."}
+      </div>
+    );
+  }
+  const { user, totalQuestions, totalAnswers } = result.data;
+
   const { name, username, bio, image, location, portfolio, reputation } = user;
 
   return (
@@ -101,7 +105,7 @@ const ProfileHeader = ({
             Questions
           </div>
           <div className="mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {totals.totalQuestions}
+            {totalQuestions}
           </div>
         </div>
         <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
@@ -109,7 +113,7 @@ const ProfileHeader = ({
             Answers
           </div>
           <div className="mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {totals.totalAnswers}
+            {totalAnswers}
           </div>
         </div>
         <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
