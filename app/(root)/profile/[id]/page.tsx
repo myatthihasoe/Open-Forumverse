@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import GetUser from "@/lib/actions/GetUserForProfile";
 import ProfileHeader from "../components/ProfileHeader";
 import GetUserQuestions from "@/lib/actions/GetUserQuestions";
@@ -20,18 +20,8 @@ const Page = async ({
   searchParams: Promise<{ tab?: string; page?: string }>;
 }) => {
   const { id } = await params;
-  const result = await GetUser({ userId: id });
   const activeTab = (await searchParams)?.tab || "questions";
   const page = parseInt((await searchParams)?.page || "1");
-
-  if (!result.success || !result.data) {
-    return (
-      <div className="mx-auto max-w-5xl px-4 py-10 text-zinc-700 dark:text-zinc-300">
-        {result.message ||
-          "Failed to load user profile. Please try again later."}
-      </div>
-    );
-  }
 
   let isSuccess = false;
   let errorMessage: string | undefined;
@@ -60,12 +50,13 @@ const Page = async ({
     errorMessage = message;
     isNext = data?.isNext ?? false;
   }
-  const { user, totalQuestions, totalAnswers } = result.data;
-  const session = await auth()
+  const session = await auth();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <ProfileHeader user={user} totals={{ totalQuestions, totalAnswers }} />
+      <Suspense fallback={<>loading...</>}>
+        <ProfileHeader userId={id} />
+      </Suspense>
       <div className="my-7 space-x-5">
         <Link
           href={`/profile/${id}?tab=questions`}
@@ -92,7 +83,11 @@ const Page = async ({
             errorMessage={errorMessage}
             render={(questions) =>
               questions.map((question) => (
-                <ThreadCard key={String(question._id)} question={question} showActions={session?.user?.id === question.author?._id} />
+                <ThreadCard
+                  key={String(question._id)}
+                  question={question}
+                  showActions={session?.user?.id === question.author?._id}
+                />
               ))
             }
           />

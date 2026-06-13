@@ -29,7 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-background ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`bg-secondary text-white dark ${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
         <SessionProvider session={session}>{children}</SessionProvider>

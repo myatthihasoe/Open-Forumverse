@@ -2,23 +2,33 @@
 
 import GetUserVote from "@/lib/actions/GetUserVote";
 import VoteAction from "@/lib/actions/VoteAction";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { toast, Bounce } from "react-toastify";
 
 function VoteButtons({
+  GetUserVotePromise,
   typeId,
   type,
   initialUpvotes,
   initialDownvotes,
 }: {
+  GetUserVotePromise: Promise<{
+    success: boolean;
+    data?: { userVote: "upvote" | "downvote" | null };
+  }>;
+
   typeId: string;
   type: "question" | "answer";
   initialUpvotes: number;
   initialDownvotes: number;
 }) {
+
+  const { success, data } = use(GetUserVotePromise);
   const [upvotes, setUpvotes] = useState(initialUpvotes);
   const [downvotes, setDownvotes] = useState(initialDownvotes);
-  const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(null);
+  const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(
+    success ? (data?.userVote ?? null) : null
+  );
 
   const showError = (message: string) => {
     toast.error(message, {
@@ -34,20 +44,20 @@ function VoteButtons({
     });
   };
 
-  useEffect(() => {
-    const fetchUserVote = async () => {
-      try {
-        const { success, data } = await GetUserVote({
-          type,
-          typeId,
-        });
-        setUserVote(success && data ? data.userVote : null);
-      } catch {
-        setUserVote(null);
-      }
-    };
-    fetchUserVote();
-  }, [type, typeId]);
+  // useEffect(() => {
+  //   const fetchUserVote = async () => {
+  //     try {
+  //       const { success, data } = await GetUserVote({
+  //         type,
+  //         typeId,
+  //       });
+  //       setUserVote(success && data ? data.userVote : null);
+  //     } catch {
+  //       setUserVote(null);
+  //     }
+  //   };
+  //   fetchUserVote();
+  // }, [type, typeId]);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     try {
