@@ -3,6 +3,8 @@ import { AnswerResponseType } from "@/database/answer.model";
 import { formatRelativeTime } from "@/lib/date";
 import VoteButtons from "./VoteButton";
 import Actions from "@/lib/actions/Actions";
+import { Suspense } from "react";
+import GetUserVote from "@/lib/actions/GetUserVote";
 
 function AnswerCard({
   answer,
@@ -41,12 +43,19 @@ function AnswerCard({
       </div>
 
       <footer className="mt-4 flex items-center justify-between">
-        <VoteButtons
-          type="answer"
-          typeId={answer?._id}
-          initialUpvotes={upvotes}
-          initialDownvotes={downvotes}
-        />
+        <Suspense fallback={<>Loading votes ...</>}>
+          <VoteButtons
+            GetUserVotePromise={GetUserVote({
+              type: "answer",
+              typeId: answer?._id,
+            })}
+            type="answer"
+            typeId={answer?._id}
+            initialUpvotes={upvotes}
+            initialDownvotes={downvotes}
+          />
+        </Suspense>
+
         <Actions
           type="answer"
           typeId={answer?._id as string}
