@@ -12,6 +12,7 @@ import { incrementViews } from "@/lib/actions/IncrementView";
 import { notFound } from "next/navigation";
 import { after } from "next/server";
 import { Suspense } from "react";
+import { VoteButtonsSkeleton } from "@/components/SkeletonLoaders";
 
 export default async function page({
   params,
@@ -52,7 +53,7 @@ export default async function page({
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">{question.title}</h1>
         <div className="flex justify-center items-center gap-3 text-xs text-gray-200">
-          <Suspense fallback={<>Loading votes ...</>}>
+          <Suspense fallback={<VoteButtonsSkeleton />}>
             <VoteButtons
               GetUserVotePromise={GetUserVote({
                 type: "question",

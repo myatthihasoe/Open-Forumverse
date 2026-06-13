@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import GetUser from "@/lib/actions/GetUserForProfile";
 import ProfileHeader from "../components/ProfileHeader";
 import GetUserQuestions from "@/lib/actions/GetUserQuestions";
 import GetUserAnswers from "@/lib/actions/GetUserAnswers";
@@ -11,6 +10,14 @@ import { AnswerResponseType } from "@/database/answer.model";
 import { QuestionFullType } from "@/database/question.model";
 import Pagination from "@/components/Pagination";
 import { auth } from "@/auth";
+import { ProfileHeaderSkeleton } from "@/components/SkeletonLoaders";
+
+function getAnswerAuthorId(author: AnswerResponseType["author"]) {
+  if (typeof author === "string") return author;
+  if ("_id" in author) return String(author._id);
+
+  return String(author);
+}
 
 const Page = async ({
   params,
@@ -54,7 +61,7 @@ const Page = async ({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <Suspense fallback={<>loading...</>}>
+      <Suspense fallback={<ProfileHeaderSkeleton />}>
         <ProfileHeader userId={id} />
       </Suspense>
       <div className="my-7 space-x-5">
@@ -104,7 +111,7 @@ const Page = async ({
                 <AnswerCard
                   key={answer._id.toString()}
                   answer={answer}
-                  showActions={session?.user?.id === answer.author._id}
+                  showActions={session?.user?.id === getAnswerAuthorId(answer.author)}
                 />
               ))
             }

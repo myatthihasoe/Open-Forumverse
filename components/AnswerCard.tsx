@@ -5,6 +5,7 @@ import VoteButtons from "./VoteButton";
 import Actions from "@/lib/actions/Actions";
 import { Suspense } from "react";
 import GetUserVote from "@/lib/actions/GetUserVote";
+import { VoteButtonsSkeleton } from "./SkeletonLoaders";
 
 function AnswerCard({
   answer,
@@ -43,7 +44,7 @@ function AnswerCard({
       </div>
 
       <footer className="mt-4 flex items-center justify-between">
-        <Suspense fallback={<>Loading votes ...</>}>
+        <Suspense fallback={<VoteButtonsSkeleton />}>
           <VoteButtons
             GetUserVotePromise={GetUserVote({
               type: "answer",

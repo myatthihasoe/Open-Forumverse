@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
-import React from "react";
+import React, { useTransition } from "react";
 
 interface Filter {
   name: string;
@@ -16,6 +16,7 @@ function CommonFilter({
   defaultFilter: string;
 }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const currentFilter = searchParams.get("filter") || defaultFilter || "";
 
@@ -37,7 +38,10 @@ function CommonFilter({
       { skipEmptyString: true, skipNull: true }
     );
 
-    router.push(url);
+    startTransition(()=>{
+      router.push(url);
+    })
+
   };
   return (
     <div className="p-5">
@@ -52,6 +56,7 @@ function CommonFilter({
           </option>
         ))}
       </select>
+      {isPending && <p>Updating...</p>}
     </div>
   );
 }
