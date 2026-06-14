@@ -23,9 +23,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const { data: question } = await GetQuestion({
-    questionId: id,
-  });
+  const { data: question } = await GetQuestion(id);
 
   return {
     title: question?.title,
@@ -40,16 +38,15 @@ export default async function page({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { id } = await params;
+  
   const { page, pageSize, filter } = await searchParams;
   const pageNum = page ? parseInt(Array.isArray(page) ? page[0] : page, 10) : 1;
   const pageSizeNum = pageSize
     ? parseInt(Array.isArray(pageSize) ? pageSize[0] : pageSize, 10)
     : 10;
   const filterStr = Array.isArray(filter) ? filter[0] : filter;
-  const { data: question } = await GetQuestion({
-    questionId: id,
-  });
+  const { id } = await params;
+  const { data: question } = await GetQuestion(id);
 
   after(async () => {
     await incrementViews({ questionId: id });
