@@ -5,6 +5,12 @@ import Pagination from "@/components/Pagination";
 import ThreadCard from "@/components/ThreadCard";
 import { CollectionFilters, DefaultFilters } from "@/constant/filters";
 import getBookMarkCollections from "@/lib/actions/GetBookMarkCollections";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Open Forumverse | Bookmark",
+  description: "Saved Posts From Bookmark",
+};
 
 async function page({
   searchParams,

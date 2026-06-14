@@ -13,6 +13,26 @@ import { notFound } from "next/navigation";
 import { after } from "next/server";
 import { Suspense } from "react";
 import { VoteButtonsSkeleton } from "@/components/SkeletonLoaders";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const {id} =  await params;
+  const { data: question } = await GetQuestion({
+    questionId: id,
+  }); 
+
+  return {
+    title: question?.title,
+    description: question?.content.slice(0,100),
+  };
+}
 
 export default async function page({
   params,

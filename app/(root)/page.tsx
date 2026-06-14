@@ -10,6 +10,12 @@ import { HomePageFilters, DefaultFilters } from "@/constant/filters";
 import { GetDiscussion } from "@/lib/actions/GetDiscussion.action";
 import { api } from "@/lib/api";
 import ROUTES from "@/routes";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Open Forumverse | Tags",
+  description: "Tags for posts",
+};
 
 export default async function page({
   searchParams,

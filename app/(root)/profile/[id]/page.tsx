@@ -11,6 +11,12 @@ import { QuestionFullType } from "@/database/question.model";
 import Pagination from "@/components/Pagination";
 import { auth } from "@/auth";
 import { ProfileHeaderSkeleton } from "@/components/SkeletonLoaders";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Open Forumverse | Profile",
+  description: "personal profile information",
+};
 
 function getAnswerAuthorId(author: AnswerResponseType["author"]) {
   if (typeof author === "string") return author;
@@ -111,7 +117,9 @@ const Page = async ({
                 <AnswerCard
                   key={answer._id.toString()}
                   answer={answer}
-                  showActions={session?.user?.id === getAnswerAuthorId(answer.author)}
+                  showActions={
+                    session?.user?.id === getAnswerAuthorId(answer.author)
+                  }
                 />
               ))
             }
