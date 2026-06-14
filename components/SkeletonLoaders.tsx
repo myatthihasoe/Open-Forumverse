@@ -89,3 +89,36 @@ export function CommunityPageSkeleton() {
     </div>
   );
 }
+
+export function AnswerSkeleton() {
+  return (
+    <div className="w-full max-w-4xl p-6 space-y-6 text-white" role="status" aria-label="Loading answer">
+      
+      {/* 1. User Profile Header (Avatar, Name, Timestamp) */}
+      <div className="flex items-center space-x-3">
+        {/* Avatar circle */}
+        <SkeletonBlock className="h-10 w-10 rounded-full" />
+        <div className="space-y-2">
+          {/* User Name */}
+          <SkeletonBlock className="h-4 w-32" />
+          {/* Timestamp */}
+          <SkeletonBlock className="h-3 w-20 opacity-60" />
+        </div>
+      </div>
+
+      {/* 2. Title (e.g., "useEffect") */}
+      <SkeletonBlock className="h-10 w-48 mt-4" />
+
+      {/* 3. Code Block Container */}
+      <div className="w-full rounded-lg bg-slate-900/50 p-4 border border-white/5">
+        <SkeletonBlock className="h-6 w-1/3" /> {/* Represents the line of code */}
+      </div>
+
+      {/* 4. Vote Buttons */}
+      <div className="pt-2">
+        <VoteButtonsSkeleton />
+      </div>
+      
+    </div>
+  );
+}
