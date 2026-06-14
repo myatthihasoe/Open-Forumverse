@@ -5,6 +5,12 @@ import UserCard from "./components/UserCard";
 import CommonFilter from "@/components/CommonFilter";
 import { UserFilters, DefaultFilters } from "@/constant/filters";
 import Pagination from "@/components/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Open Forumverse | Community",
+  description: "Community's Developers",
+};
 
 async function page({
   searchParams,

@@ -10,14 +10,16 @@ import GetQuestionSchema from "../schemas/GetQuestionSchema";
 import Tag from "@/database/tag.model";
 import Collection from "@/database/collection.model";
 import { auth } from "@/auth";
+import { cache } from "react";
 
-export async function GetQuestion(params: { questionId: string }): Promise<{
+const GetQuestion = cache(async (questionId:string): Promise<{
   success: boolean;
   data?: QuestionWithTagsAndSavedType;
-}> {
+}> => {
   await dbConnect();
-  const validatedData = validateData(params, GetQuestionSchema);
-  const { questionId } = validatedData.data;
+  console.log("Hit")
+  const validatedData = validateData({questionId}, GetQuestionSchema);
+  // const { questionId } = validatedData.data;
   //   console.log(questionId);
 
   try {
@@ -43,4 +45,6 @@ export async function GetQuestion(params: { questionId: string }): Promise<{
   } catch (error) {
     return actionError(error);
   }
-}
+})
+
+export {GetQuestion}

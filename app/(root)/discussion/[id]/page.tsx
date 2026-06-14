@@ -1,48 +1,56 @@
 import AnswerForm from "@/components/AnswerForm";
 import AnswerList from "@/components/AnswerList";
-import Pagination from "@/components/Pagination";
 import PreviewMarkdown from "@/components/PreviewMarkdown";
 import TagCard from "@/components/TagCard";
 import ToggleBookMark from "@/components/ToggleBookMark";
 import VoteButtons from "@/components/VoteButton";
-import GetAnswers from "@/lib/actions/GetAnswers";
 import { GetQuestion } from "@/lib/actions/GetQuestion.action";
 import GetUserVote from "@/lib/actions/GetUserVote";
 import { incrementViews } from "@/lib/actions/IncrementView";
 import { notFound } from "next/navigation";
 import { after } from "next/server";
 import { Suspense } from "react";
-import { VoteButtonsSkeleton } from "@/components/SkeletonLoaders";
+import {
+  AnswerSkeleton,
+  VoteButtonsSkeleton,
+} from "@/components/SkeletonLoaders";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const { data: question } = await GetQuestion(id);
+
+  return {
+    title: question?.title,
+    description: question?.content.slice(0, 100),
+  };
+}
 
 export default async function page({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { id } = await params;
+  
   const { page, pageSize, filter } = await searchParams;
-  const { data: question } = await GetQuestion({
-    questionId: id,
-  });
+  const pageNum = page ? parseInt(Array.isArray(page) ? page[0] : page, 10) : 1;
+  const pageSizeNum = pageSize
+    ? parseInt(Array.isArray(pageSize) ? pageSize[0] : pageSize, 10)
+    : 10;
+  const filterStr = Array.isArray(filter) ? filter[0] : filter;
+  const { id } = await params;
+  const { data: question } = await GetQuestion(id);
 
   after(async () => {
     await incrementViews({ questionId: id });
   });
-
-  const {
-    data: answersData,
-    success: answersSuccess,
-    message: errorAnswer,
-  } = await GetAnswers({
-    questionId: id,
-    page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
-    filter: filter || "",
-  });
-
-  const { answers = [], totalAnswers = 0, isNext = false } = answersData || {};
 
   if (!question) notFound();
 
@@ -83,13 +91,14 @@ export default async function page({
         ))}
       </div>
       <div className="my-3">
-        <AnswerList
-          answers={answers}
-          totalAnswers={totalAnswers}
-          success={answersSuccess}
-          errorMessage={errorAnswer}
-        />
-        <Pagination isNext={isNext} page={page || 1} />
+        <Suspense fallback={<AnswerSkeleton />}>
+          <AnswerList
+            page={pageNum}
+            pageSize={pageSizeNum}
+            filter={filterStr as string}
+            id={id}
+          />
+        </Suspense>
       </div>
       <div className="my-3">
         <AnswerForm
