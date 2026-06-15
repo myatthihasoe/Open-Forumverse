@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 
 export default async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { data: question, success } = await GetQuestion({ questionId: id });
+  const { data: question, success } = await GetQuestion(id);
   // console.log(question);
   if (!success) return notFound();
 
