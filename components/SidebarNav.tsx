@@ -6,7 +6,7 @@ import React from "react";
 import { FaHome, FaUsers, FaUserTag } from "react-icons/fa";
 
 import ROUTES from "@/routes";
-import { MdQuestionAnswer } from "react-icons/md";
+import { MdNewspaper, MdQuestionAnswer } from "react-icons/md";
 import { RiBookMarkedLine, RiLoginCircleLine } from "react-icons/ri";
 
 interface SidebarNavProps {
@@ -62,6 +62,19 @@ function SidebarNav({ isAuthenticated }: SidebarNavProps) {
         >
           <MdQuestionAnswer />
           <span>Discussion</span>
+        </Link>
+      </li>
+      <li
+        className={`rounded-xl p-3 ${
+          isActive(ROUTES.TECH_NEWS) ? "bg-main" : "bg-primary"
+        }`}
+      >
+        <Link
+          href={ROUTES.TECH_NEWS}
+          className="flex items-center space-x-4 text-[16px] font-bold"
+        >
+          <MdNewspaper />
+          <span>Tech News</span>
         </Link>
       </li>
       {isAuthenticated && (
