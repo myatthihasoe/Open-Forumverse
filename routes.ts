@@ -4,6 +4,7 @@ const ROUTES = {
   TAGS: "/tags",
   POSTS: "/posts",
   NEWS: "/news",
+  TECH_NEWS: "/tech-news",
   DISCUSSION: "/discussion",
   DISCUSSION_CREATE: "/discussion/create",
   DISCUSSION_DETAIL: (id: string) => "/discussion/" + id,

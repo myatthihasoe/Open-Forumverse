@@ -8,7 +8,7 @@ export interface TagType {
   updatedAt?: Date;
 }
 
-export interface TagDocument extends TagType, Document {}
+export interface TagDocument extends Omit<TagType, "_id">, Document {}
 
 const TagSchema = new Schema(
   {
