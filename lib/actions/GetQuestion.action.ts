@@ -17,13 +17,11 @@ const GetQuestion = cache(async (questionId:string): Promise<{
   data?: QuestionWithTagsAndSavedType;
 }> => {
   await dbConnect();
-  console.log("Hit")
   const validatedData = validateData({questionId}, GetQuestionSchema);
-  // const { questionId } = validatedData.data;
-  //   console.log(questionId);
+const { questionId: validatedQuestionId } = validatedData.data;
 
   try {
-    const question = await Question.findById(questionId).populate({
+    const question = await Question.findById(validatedQuestionId).populate({
       path: "tags",
       model: Tag, // Passing the actual model object instead of a string
     });
@@ -35,7 +33,7 @@ const GetQuestion = cache(async (questionId:string): Promise<{
     const auth_session = await auth();
 
     const collection = await Collection.findOne({
-      question: questionId,
+      question: validatedQuestionId,
       author: auth_session?.user?.id,
     });
     return {

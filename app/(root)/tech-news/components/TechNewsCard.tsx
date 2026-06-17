@@ -1,9 +1,11 @@
+import { TechNewsArticle } from "@/lib/actions/GetTechNews";
 import Link from "next/link";
+import Image from "next/image";
 import { AiFillLike } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
-import { DevToArticle } from "../page";
+import { FaClock, FaComment } from "react-icons/fa";
 
-function TechNewsCard({ article }: { article: DevToArticle }) {
+function TechNewsCard({ article }: { article: TechNewsArticle }) {
+  const profileImage = article.user?.profile_image_90 || "/profile.jpg";
   const tags = article.tag_list?.slice(0, 3) || [];
 
   return (
@@ -43,22 +45,33 @@ function TechNewsCard({ article }: { article: DevToArticle }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between text-sm text-gray-300">
-          <span>
-            {article.user.name}{" "}
-            <i className="ml-2 text-gray-500">
+        <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+          <div className="flex items-center space-x-3 text-[14px] text-gray-300">
+            <Image
+              src={profileImage}
+              width={30}
+              height={30}
+              className="aspect-square rounded-full object-cover"
+              alt={article.user?.name || "Author"}
+            />
+            <span>
+              {article.user?.name || article.user?.username} •{" "}
               {article.readable_publish_date}
-            </i>
-          </span>
-          <div className="flex items-center gap-4">
-            <span>
+            </span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1 text-[14px] text-gray-300">
               <AiFillLike />
-              {article.positive_reactions_count} Likes
-            </span>
-            <span>
+              <span>{article.public_reactions_count}</span>
+            </div>
+            <div className="flex items-center space-x-1 text-[14px] text-gray-300">
               <FaComment />
-              {article.comments_count} Comments
-            </span>
+              <span>{article.comments_count}</span>
+            </div>
+            <div className="flex items-center space-x-1 text-[14px] text-gray-300">
+              <FaClock />
+              <span>{article.reading_time_minutes} min read</span>
+            </div>
           </div>
         </div>
       </div>
