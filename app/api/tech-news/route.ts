@@ -28,7 +28,9 @@ export async function GET() {
     const shuffledArticles = shuffleArray(articles);
 
     //Delay response 2s
-    await delay(RESPONSE_DELAY_MS)
+    if (process.env.NODE_ENV === "development") {
+      await delay(RESPONSE_DELAY_MS);
+    }
 
     return handleSuccessResponse(shuffledArticles);
   } catch (error: unknown) {

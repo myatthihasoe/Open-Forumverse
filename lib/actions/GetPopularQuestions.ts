@@ -10,8 +10,8 @@ const GetPopularQuestions = async (): Promise<{
   message?: string;
   details?: object | null;
 }> => {
-  await dbConnect();
   try {
+    await dbConnect();
     const questions = await Question.find({})
       .select("_id title views upvotes")
       .lean()
