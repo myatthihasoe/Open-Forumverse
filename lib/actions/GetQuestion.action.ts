@@ -17,10 +17,9 @@ const GetQuestion = cache(async (questionId:string): Promise<{
   data?: QuestionWithTagsAndSavedType;
 }> => {
   await dbConnect();
-  console.log("Hit")
   const validatedData = validateData({questionId}, GetQuestionSchema);
   // const { questionId } = validatedData.data;
-  //   console.log(questionId);
+
 
   try {
     const question = await Question.findById(questionId).populate({

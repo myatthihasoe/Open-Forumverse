@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -14,11 +15,16 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         // pathname: "/u/**", // Optional, but limits access specifically to user avatar paths for extra security
       },
+      {
+        protocol: 'https',
+        hostname: 'media2.dev.to',
+        pathname: '/**', // Allows all paths under this domain
+      },
     ],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
 };
 
 export default nextConfig;

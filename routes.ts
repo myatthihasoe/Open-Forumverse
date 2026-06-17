@@ -2,6 +2,7 @@ const ROUTES = {
   HOME: "/",
   POPULAR: "/popular",
   TAGS: "/tags",
+  TAG_DETAILS: (id: string) => "/tags/" + id,
   POSTS: "/posts",
   NEWS: "/news",
   TECH_NEWS: "/tech-news",
