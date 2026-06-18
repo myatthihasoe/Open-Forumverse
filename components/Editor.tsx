@@ -8,7 +8,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { useCallback } from "react";
 import { FaCode, FaItalic, FaLink, FaListOl, FaListUl } from "react-icons/fa";
-import { BulletList, OrderedList } from "@tiptap/extension-list";
+import { BulletList} from "@tiptap/extension-bullet-list";
+import { OrderedList } from "@tiptap/extension-ordered-list";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { createLowlight, all } from "lowlight";
 import css from "highlight.js/lib/languages/css";
@@ -16,8 +17,8 @@ import js from "highlight.js/lib/languages/javascript";
 import ts from "highlight.js/lib/languages/typescript";
 import html from "highlight.js/lib/languages/xml";
 import "highlight.js/styles/github-dark.css";
-import { Markdown } from "tiptap-markdown";
 import { useEffect } from "react";
+import { Markdown } from "tiptap-markdown";
 
 // create a lowlight instance with all languages loaded
 const lowlight = createLowlight(all);
