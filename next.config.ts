@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    // unoptimized: true,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'media2.dev.to',
         pathname: '/**', // Allows all paths under this domain
+      },
+      {
+        protocol: 'https',
+        hostname: 'open-forumverse.vercel.app',
+        pathname: '/**'
       },
     ],
   },
